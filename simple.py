@@ -9,10 +9,9 @@ import csv
 # проверка разбиения на корректность с помощью коэффициента вариации
 # считает среднее усеченное(отсекает мин и макс и считает среднее)
 # читает и пишет в файл csv
-# строит диаграмму рассеивания
+# строит график распределения величин
+# наносит среднее, медиану, задает границы нормального распределения(правило сигм)
 
-
-#добавить доверительный интервал(в размере 2 стандартных отклонений от среднего)
 markers = []
 markers1 = []
 result1 = []
@@ -74,10 +73,10 @@ a1 = []
 border_max = min1 + interv
 border_min = min1
 groups = 0
-while groups < k:
+while groups <= k:
     a2 = []
     for elems in list1:
-        if(elems <= border_max and elems >= border_min):
+        if(elems < border_max and elems >= border_min):
             a2.append(elems)
     groups = groups + 1
     border_min = border_max
@@ -141,8 +140,19 @@ print("Выборка исследована, результаты в файле
 plt.title("Распределение значений")
 plt.xlabel("Маркеры")
 plt.ylabel("Значения")
-plt.scatter(markers1,list1, 20,color = 'red', marker = 'o')
+plt.plot(markers1, list1,color = 'red', marker = 'o')
+plt.axhline(average, color = 'blue', label = 'Среднее')
+plt.axhline(median, color = 'green', label = 'Медиана')
+plt.axhline(average + stde, color = 'black', label ='Первая сигма(>= 68%)', linewidth = 5)
+plt.axhline(average - stde, color = 'black', linewidth = 5)
+
+plt.axhline(average + stde * 2, color = 'orange', label ='Вторая сигма(>= 95%)', linewidth = 5)
+plt.axhline(average - stde * 2, color = 'orange', linewidth = 5)
+
+plt.grid(True)
+plt.legend()
 plt.show()
+
 
 
 
