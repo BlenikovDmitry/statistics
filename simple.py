@@ -2,6 +2,7 @@ import math
 import statistics
 import matplotlib.pyplot as plt
 import csv
+import random
 
 #что умеем:
 # среднее, медиана, дисперсия, стандартное отклонение, коэффициент вариации выборки
@@ -14,20 +15,25 @@ import csv
 
 markers = []
 markers1 = []
-result1 = []
+result = []
 list1 = []
 counter = 0
 #считываем маркеры и сами данные
 with open("in.csv", 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-                if counter == 0:
-                        markers = row
-                result1 = row
-                counter = counter + 1
-                
-markers1 = [str(item) for item in markers]
-list1 = [float(item) for item in result1]
+                markers1.append(str(row[0]))
+                list1.append(float(row[1]))
+#отбираем n случайных точек выборки
+#while counter <= 10:
+#        tmp = random.choice(result)
+#        index = result.index(tmp)
+#        list1.append(tmp)
+#        markers1.append(markers[index])
+
+#        result.remove(tmp)
+#        markers.remove(markers[index])
+#        counter = counter + 1
 
 #сортируем выборку
 list_sorted = sorted(list1)
@@ -122,9 +128,6 @@ result_groups_varias = ["Их коэффициенты вариации:"]
 # вывод результатов а файл и проверка на коэффициенты вариации
 with open('result.csv', 'w') as f:
     writer = csv.writer(f,  lineterminator='\n')
-    writer.writerow(result_data)
-    writer.writerow(result_data1 + markers1)
-    writer.writerow(result_data2 + list1)
     writer.writerow(result_statistics_average)
     writer.writerow(result_statistics_average_short)
     writer.writerow(result_statistics_median)
@@ -140,7 +143,7 @@ print("Выборка исследована, результаты в файле
 plt.title("Распределение значений")
 plt.xlabel("Маркеры")
 plt.ylabel("Значения")
-plt.plot(markers1, list1,color = 'red', marker = 'o')
+plt.scatter(markers1, list1,color = 'red', marker = 'o')
 plt.axhline(average, color = 'blue', label = 'Среднее')
 plt.axhline(median, color = 'green', label = 'Медиана')
 plt.axhline(average + stde, color = 'black', label ='Первая сигма(>= 68%)', linewidth = 5)
@@ -149,7 +152,6 @@ plt.axhline(average - stde, color = 'black', linewidth = 5)
 plt.axhline(average + stde * 2, color = 'orange', label ='Вторая сигма(>= 95%)', linewidth = 5)
 plt.axhline(average - stde * 2, color = 'orange', linewidth = 5)
 
-plt.grid(True)
 plt.legend()
 plt.show()
 
