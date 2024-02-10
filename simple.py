@@ -24,16 +24,6 @@ with open("in.csv", 'r') as f:
         for row in reader:
                 markers1.append(str(row[0]))
                 list1.append(float(row[1]))
-#отбираем n случайных точек выборки
-#while counter <= 10:
-#        tmp = random.choice(result)
-#        index = result.index(tmp)
-#        list1.append(tmp)
-#        markers1.append(markers[index])
-
-#        result.remove(tmp)
-#        markers.remove(markers[index])
-#        counter = counter + 1
 
 #сортируем выборку
 list_sorted = sorted(list1)
@@ -67,6 +57,7 @@ k = (max1 - min1) / interv
 
 k = math.ceil(k)
 interv = math.ceil(interv)
+        
     
 #принцип действия:
 #задаем нижнюю и верхнюю границы очередного интервала
@@ -74,7 +65,7 @@ interv = math.ceil(interv)
 # когда элементы кончаются, переходим к следующему интервалу
 #исходный массив переписываем в список групп с индексом [0][n]
 # где n - число групп
-
+groups_info = []
 a1 = []
 border_max = min1 + interv
 border_min = min1
@@ -88,14 +79,17 @@ while groups <= k:
     border_min = border_max
     border_max = border_max + interv
     a1.append(a2)
+    if a2:
+            group_min = min(a2)
+            group_max = max(a2)
+            group_count = len(a2)
+            groups_info.append("("+str(group_min) + "-" + str(group_max)+ ")" + " к-во: " + str(group_count))
 
 
 elems = 0
 while elems < k:
-    #print(a1[elems])
     elems = elems + 1
 
-#print("коэффициенты вариации: ")
 elems = 0
 result_varia = []
 while elems < k:
@@ -103,17 +97,44 @@ while elems < k:
                 stde1 = statistics.stdev(a1[elems])
                 average1 = statistics.mean(a1[elems])
                 varia1 = stde1 / average1
-                #print(varia1)
                 result_varia.append(round(varia1, 2))
         else: 
                 result_varia.append("0")
         
         elems = elems + 1
 #######################################################
+#считает сколько точек попало в границы сигм(стандартных отклонений)
+#считает, сколько % точек лежит внутри сигма1 и сигма2
+#считает диапазон сигмы1 и сигмы2
+#######################################################
+count_sigma1 = 0
+count_sigma2 = 0
+count_sigma1_perc = 0
+count_sigma2_perc = 0
+min_sigma1 = 100000
+max_sigma1 = 0
+min_sigma2 = 100000
+max_sigma2 = 0
+for elem in list1:
+        if(int(elem >= (average - stde)) & int(elem <= (average + stde))):
+                count_sigma1 = count_sigma1 + 1
+                if(elem < min_sigma1):
+                        min_sigma1 = elem
+                if(elem > max_sigma1):
+                        max_sigma1 = elem
+        if(int(elem >= (average - stde * 2)) & int(elem <= (average + stde * 2))):
+                count_sigma2 = count_sigma2 + 1
+                if(elem < min_sigma2):
+                        min_sigma2 = elem
+                if(elem > max_sigma2):
+                        max_sigma2 = elem
+
+count_sigma1_perc = count_sigma1 / int(len(list1)) * 100
+count_sigma2_perc = count_sigma2 / int(len(list1)) * 100
+#######################################################
 #Формирование выходных данных
 result_data = ["Исходные данные: "]
 result_data1 = ["Маркеры"]
-result_data2 = ["Данные"]
 result_statistics_average = ["Среднее", average]
 result_statistics_average_short = ["Cреднее усеченное(без минимума и максимума):",average_short]
 result_statistics_median = ["Медиана:", round(median, 2)]
@@ -123,6 +144,11 @@ result_statistics_interv = ["Граница интервала:", round(interv, 
 result_statistics_intervals_number = ["Число интервалов:", k]
 result_groups = ["Получились группы:"]
 result_groups_varias = ["Их коэффициенты вариации:"]
+result_sigma = ["Точек в границах стандартного отклонения", str(len(list1))]
+result_sigma1 = ["Точек в границах стандартного отклонения(абсолютное, относительное, диапазон)", str(count_sigma1), str(count_sigma1_perc),
+                 str(min_sigma1) + "-" + str(max_sigma1)]
+result_sigma2 = ["Точек в границах 2 стандартных отклонений(абсолютное, относительное, диапазон)", str(count_sigma2), str(count_sigma2_perc),
+                 str(min_sigma2) + "-" + str(max_sigma2)]
 ##############################################################
 
 # вывод результатов а файл и проверка на коэффициенты вариации
@@ -135,11 +161,16 @@ with open('result.csv', 'w') as f:
     writer.writerow(result_statistics_varia)
     writer.writerow(result_statistics_interv)
     writer.writerow(result_statistics_intervals_number)
-    writer.writerow(result_groups + a1)
+    writer.writerow(result_groups + groups_info)
     writer.writerow(result_groups_varias + result_varia)
+    writer.writerow(result_sigma)
+    writer.writerow(result_sigma1)
+    writer.writerow(result_sigma2)
+    
 
 print("Выборка исследована, результаты в файле")
 #######################################################
+plt.figure(figsize=(15,15))
 plt.title("Распределение значений")
 plt.xlabel("Маркеры")
 plt.ylabel("Значения")
@@ -153,7 +184,9 @@ plt.axhline(average + stde * 2, color = 'orange', label ='Вторая сигм�
 plt.axhline(average - stde * 2, color = 'orange', linewidth = 5)
 
 plt.legend()
-plt.show()
+#plt.show()
+
+
 
 
 
