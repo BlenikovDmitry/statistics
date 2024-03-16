@@ -35,12 +35,10 @@ distribution_median = []
 distribution_stde = []
 while counter_iteration < 10000:
         counter = 0
-        markers_var = []
         data_var = []
-        while counter < len(markers):
+        while counter < len(data):
                 tmp = random.random() * len(data)
                 data_var.append(data[int(tmp)])
-                markers_var.append(markers[int(tmp)])
                 counter = counter + 1
 
         # среднее
@@ -49,13 +47,9 @@ while counter_iteration < 10000:
         median = statistics.median(data_var)
         #стандартное отклонение
         stde = statistics.stdev(data_var)
-       # result = ["Среднее", str(average), "Медиана", median, "Стандартное отклонение", stde]
         distribution_average.append(average)
         distribution_median.append(median)
         distribution_stde.append(stde)
-        #with open('result.csv', 'a') as f:
-         #       writer = csv.writer(f,  lineterminator='\n')
-         #       writer.writerow(result)
         
         counter_iteration = counter_iteration + 1
 print("Вычисления окончены")
