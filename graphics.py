@@ -32,11 +32,14 @@ def read():
 - помещаем фигуру в canvas
 - отрисовываем canvas
 """
+    
+
+    
 def simple_graphic_button_click():
     for widget in frame1.winfo_children():
         widget.destroy()
     
-    fig = plt.figure(figsize=(13,6))
+    fig = plt.figure(figsize=(14,7))
     ax = fig.add_subplot(111)
     
 
@@ -70,7 +73,7 @@ def scatterplot_button_click():
     for widget in frame1.winfo_children():
         widget.destroy()
 
-    fig = plt.figure(figsize=(13,6), dpi=100)
+    fig = plt.figure(figsize=(14,7))
     ax = fig.add_subplot(111)
     
     plt.xticks(rotation="vertical")
@@ -111,7 +114,7 @@ def histogram_button():
     for widget in frame1.winfo_children():
         widget.destroy()
 
-    fig = plt.figure(figsize=(13,6), dpi=100)
+    fig = plt.figure(figsize=(14,7))
     ax = fig.add_subplot(111)
     plt.xticks(rotation="vertical")
     plt.subplots_adjust(left=0.13, 
@@ -156,7 +159,7 @@ def histogram_stde_button_click():
     for widget in frame1.winfo_children():
         widget.destroy()
     
-    fig = plt.figure(figsize=(13,6), dpi=100)
+    fig = plt.figure(figsize=(14,7))
     ax = fig.add_subplot(111)
 
     plt.xticks(rotation="vertical")
@@ -204,7 +207,7 @@ def barplot_button_click():
     for widget in frame1.winfo_children():
         widget.destroy()
 
-    fig = plt.figure(figsize=(13,6), dpi=100)
+    fig = plt.figure(figsize=(14,7))
     ax = fig.add_subplot(111)
     plt.xticks(rotation="vertical")
     plt.subplots_adjust(left=0.13, 
@@ -225,6 +228,21 @@ def barplot_button_click():
     canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
     plt.close()
     #sys.exit()
+
+def data_set_button_click():
+    x.clear()
+    y.clear()
+    read()
+    average_label = tk.Label(frame,text = "Среднее: " + str(round(statistics.mean(y), 2)),width = "25", anchor=tk.W).grid(row="5", sticky="w", pady = 5, padx = 0)
+    median_label = tk.Label(frame,text = "Медиана: " + str(round(statistics.median(y), 2)),width = "25", anchor=tk.W).grid(row="6", sticky="w", pady = 5)
+    stde_label = tk.Label(frame,text = "Стандартное отклонение: " + str(round(statistics.stdev(y), 2)),width = "25", anchor=tk.W).grid(row="7", sticky="w", pady = 5)
+    varia_label = tk.Label(frame,text = "Коэффициент вариации: " +str(round(statistics.stdev(y) / statistics.mean(y), 2)) ,width = "25", anchor=tk.W).grid(row="8", sticky="w", pady = 5)
+    max_min_label = tk.Label(frame,text = "Размах выборки: " + str(min(y)) + " - " + str(max(y)),width = "25", anchor=tk.W).grid(row="9", sticky="w", pady = 5)
+
+    simple_graphic_button_click()
+#когда - нибудь я сделаю кастомизацию графиков=)))
+def graphics_customization_button_click():
+    print(1)
     
     
     
@@ -240,20 +258,32 @@ window.state('zoomed')
 #читаем файл данных
 read()
 #создаем фрейм для кнопок
-frame = ttk.Frame(borderwidth="1", relief="solid", padding=["12", "10"])
+frame = ttk.LabelFrame(master = window, text = "Графики", borderwidth="10", relief="solid")
 #создаем фрейм для отрисовки графика
-frame1 = ttk.Frame(borderwidth="1", relief="solid", padding=["12", "10"],height=10*100, width=12*100)
+frame1 = ttk.Frame(master = window, borderwidth="10", relief="solid", width = 1500, height = 800)
+#создает фрейм для опций и настроек
+frame2 = ttk.LabelFrame(master = window, text = "Опции", borderwidth="10", relief="solid")
 #создаем кнопки в фрейме frame
-simple_graphic_button = tk.Button(frame,text = "Линейный график",width = "25", command = simple_graphic_button_click).grid(row="0", sticky="w")
-scatterplot_button = tk.Button(frame,text = "Точечный график",width = "25", command = scatterplot_button_click).grid(row="1", sticky="w")
-barplot_button = tk.Button(frame,text = "Столбцовый график",width = "25", command= barplot_button_click).grid(row="2", sticky="w")
-histogram_average_button = tk.Button(frame,text = "Гистограмма среднего",width = "25", command = histogram_button).grid(row="3", sticky="w")
-histogram_stde_button = tk.Button(frame,text = "Гистограмма отклонения",width = "25", command=histogram_stde_button_click).grid(row="4", sticky="w")
-#картинка для привлечения внимания
-image = tk.PhotoImage(file='warning.gif')
-lbl = tk.Label(frame1, image=image).grid(row="0", sticky="n")
+simple_graphic_button = tk.Button(frame,text = "Линейный график",width = "25", command = simple_graphic_button_click).grid(row="0", sticky="w", pady = 5)
+scatterplot_button = tk.Button(frame,text = "Точечный график",width = "25", command = scatterplot_button_click).grid(row="1", sticky="w", pady = 5)
+barplot_button = tk.Button(frame,text = "Столбцовый график",width = "25", command= barplot_button_click).grid(row="2", sticky="w", pady = 5)
+histogram_average_button = tk.Button(frame,text = "Гистограмма среднего",width = "25", command = histogram_button).grid(row="3", sticky="w", pady = 5)
+histogram_stde_button = tk.Button(frame,text = "Гистограмма отклонения",width = "25", command=histogram_stde_button_click).grid(row="4", sticky="w", pady = 5)
+
+average_label = tk.Label(frame,text = "Среднее: " + str(round(statistics.mean(y), 2)),width = "25", anchor=tk.W).grid(row="5", sticky="w", pady = 5, padx = 0)
+median_label = tk.Label(frame,text = "Медиана: " + str(round(statistics.median(y), 2)),width = "25", anchor=tk.W).grid(row="6", sticky="w", pady = 5)
+stde_label = tk.Label(frame,text = "Стандартное отклонение: " + str(round(statistics.stdev(y), 2)),width = "25", anchor=tk.W).grid(row="7", sticky="w", pady = 5)
+varia_label = tk.Label(frame,text = "Коэффициент вариации: " +str(round(statistics.stdev(y) / statistics.mean(y), 2)) ,width = "25", anchor=tk.W).grid(row="8", sticky="w", pady = 5)
+max_min_label = tk.Label(frame,text = "Размах выборки: " + str(min(y)) + " - " + str(max(y)),width = "25", anchor=tk.W).grid(row="9", sticky="w", pady = 5)
+
+
+data_set_button = tk.Button(frame2,text = "Обновить dataset",width = "25", command = data_set_button_click).grid(row="0", sticky="w", pady = 5)
+#graphics_customization_button = tk.Button(frame2,text = "Настройки графиков",width = "25", command = graphics_customization_button_click).grid(row="1", sticky="w", pady = 5)
 #размещаем оба фрейма на окне
 frame.grid(row="0",column="0",sticky="nw")
 frame1.grid(row="0",column="1", sticky="n")
+frame2.grid(row="1",column="0", sticky="nw")
+
+simple_graphic_button_click()
 
 window.mainloop()
