@@ -22,6 +22,12 @@ def read(name, kupon, end_data, price, last_doh):
             last_doh.append(str(row[13]))
             nominal.append(str(row[7]))
 
+"""
+прописать также функции:
+- максимальный купон - отбор
+- оформить алгоритм подсчета и вывода в отдельныю функцию
+- добавить конфиг, где будут настройки суммы, на которую будем покупать и количество таких бумаг
+"""
 def min_price(price):
     min_price = 10000
     index = 0
@@ -66,7 +72,7 @@ while counter < sum_elems:
     end_data_c.append(end_data[min_price_index])
     price_c.append(price[min_price_index])
     last_doh_c.append(last_doh[min_price_index])
-    nominal_c.append(float(nominal[min_price_index]) / 1000)
+    nominal_c.append(float(nominal[min_price_index]))
     name.pop(min_price_index)
     kupon.pop(min_price_index)
     end_data.pop(min_price_index)
@@ -76,8 +82,8 @@ while counter < sum_elems:
 
 counter = 0
 while counter < sum_elems:
-    count_bonds.append(int(summa / (float(price_c[counter]) * nominal_c[counter] * 10)))
-    summa_babla_year.append(int(count_bonds[counter] * 1000 * float(kupon_c[counter]) / 100))
+    count_bonds.append(int(summa / (float(price_c[counter]))))
+    summa_babla_year.append(int(count_bonds[counter] * float(kupon_c[counter])))
     counter += 1
 
 now = datetime.now()
@@ -96,7 +102,8 @@ end_data_out = ["дата погашения "]
 price_out = ["цена "]
 last_doh_out = ["дох посл сделки "]
 nominal_out = ["номинал "]
-summa_babla_all_out = ["остаток купона"]
+summa_babla_year_out = ["сумма купонов за год"]
+summa_babla_all_out = ["сумма купонов за весь срок"]
 with open('cheapest_bonds_out.csv', 'w') as f:
     writer = csv.writer(f,  lineterminator='\n')
     writer.writerow(code_out + name_c)
@@ -105,6 +112,7 @@ with open('cheapest_bonds_out.csv', 'w') as f:
     writer.writerow(price_out + price_c)
     writer.writerow(last_doh_out + last_doh_c)
     writer.writerow(nominal_out + nominal_c)
+    writer.writerow(summa_babla_year_out + summa_babla_year)
     writer.writerow(summa_babla_all_out + summa_babla_all)
 
 print(1)
