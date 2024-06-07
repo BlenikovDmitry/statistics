@@ -14,7 +14,7 @@ import config
 max_kupon_bonds_out.csv - для бумаг с самым высоким купоном
 """
 def read(name, kupon, end_data, price, last_doh, nominal):
-    with open("ofz_cleared.csv", 'r') as f:
+    with open("result\ofz_cleared.csv", 'r') as f:
         reader = csv.reader(f)
         for row in reader:
             name.append(str(row[1]))
