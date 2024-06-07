@@ -54,6 +54,8 @@ def graphics():
     eng.print_img("kupon_ofz_sorted.png", "купонная доходность")
     eng.print_p("График погашения:")
     eng.print_img("end_graphic_ofz.png", "доходность последней сделки")
+    eng.print_p("Доходность последней сделки:")
+    eng.print_img("dohod_eff_ofz_sorted.png", "доходность последней сделки")
     eng.print_p("Ликвидность:")
     eng.print_img("volume_ofz_sorted.png", "Ликвидность")
     eng.floor()
