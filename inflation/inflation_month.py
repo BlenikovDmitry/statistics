@@ -7,16 +7,20 @@ import statistics
 month = []
 #затраты
 cost = []
-#помесячная инфляция
+#помесячная инфляция относительно предыдущего месяца
 infl_perc_month = []
+#помесячная инфляция относительно стартовой точки
+#infl_perc_month_abs = []
 #общая инфляция за весь период
 infl_total = 0
 """
 Простейший скрипт подcчета помесячной инфляции
 Вход: файл input_month.csv
 Содержит столбец с месяцами и столбец с затратами в процентах
+Первой строчкой важно указать стартовую точку(название любое, сумма, от которой отталкиваемся)
 Вывод: в консоль общую инфляцию за период, среднее, стандартное отклонение
 В отдельное окно динамика затрат в %
+!!!Написан работающий код для подсчета инфляции относительно стартовой точки, но он закомментирован
 """
 
 
@@ -36,12 +40,16 @@ with open('input_month.csv', 'r', newline='') as csvfile:
 Подсчет инфляции в процентах помесячной
 Подсчет среднего и страндартного отклонения
 """
+
 counter = 1
-infl_perc_month.append(0.0)
 while counter < len(cost):
     infl_perc_month.append(round((cost[counter] / cost[counter - 1] - 1),2))
+    #infl_perc_month_abs.append(round((cost[counter] / cost[0] - 1),2))
     counter += 1
 
+#start_point = cost[0]
+cost.pop(0)
+month.pop(0)
 
 counter = 0
 sum_was = 0
@@ -53,12 +61,13 @@ while counter < len(cost):
 
 infl_total = (sum_is / sum_was) * 100 - 100
 dev = round(statistics.pstdev(infl_perc_month), 2)
-print(sum_was)
-print(sum_is)
 print("Общий рост расходов за период: ", str(round(infl_total, 2)) + "%")
 print("Средняя динамика по месяцам: ", str(round(statistics.mean(infl_perc_month), 2)) + "%")
 print("Отклонение: ", str(dev) + "%")
 print(infl_perc_month)
+print(sum(infl_perc_month))
+#print(infl_perc_month_abs)
+#print(sum(infl_perc_month_abs))
 """
 ///////////////////////////////////////////////////
 """
@@ -70,10 +79,7 @@ fig, ax = plt.subplots()
 plt.title('Динамика затрат по месяцам')
 plt.xlabel("Месяц")
 plt.ylabel("Затраты(рост/падение) %")
-#ax.plot(month, infl_perc_month, 'o-', linewidth=2.0, color = 'red', markeredgecolor='black', markerfacecolor='blue', label = 'динамика затрат')
-#отрисовка линий стандартного отклонения
-#ax.axhline(dev, linewidth=2, color='b')
-#ax.axhline((dev * (-1)), linewidth=2, color='b', label = 'Границы нормальности')
+
 counter = 0
 colors = []
 while counter < len(infl_perc_month):
