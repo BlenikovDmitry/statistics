@@ -9,15 +9,14 @@ month = []
 cost = []
 #помесячная инфляция
 infl_perc_month = []
-#финальная инфляция
+#общая инфляция за весь период
 infl_total = 0
-
 """
 Простейший скрипт подcчета помесячной инфляции
 Вход: файл input_month.csv
-Содержит столбец с месяцами и столбец с затратами в рублях
-Вывод: в консоль среднее, медиану, стандартное отклонение
-В отдельное окно график затрат в рублях
+Содержит столбец с месяцами и столбец с затратами в процентах
+Вывод: в консоль общую инфляцию за период, среднее, стандартное отклонение
+В отдельное окно динамика затрат в %
 """
 
 
@@ -33,9 +32,9 @@ with open('input_month.csv', 'r', newline='') as csvfile:
 ////////////////////////////////////////////////////
 """
 """
+Подсчет инфляции за весь период
 Подсчет инфляции в процентах помесячной
-Подсчет накопленно инфляции
-Подсчет среднего, медианы и страндартного отклонения
+Подсчет среднего и страндартного отклонения
 """
 counter = 1
 infl_perc_month.append(0.0)
@@ -43,35 +42,59 @@ while counter < len(cost):
     infl_perc_month.append(round((cost[counter] / cost[counter - 1] - 1),2))
     counter += 1
 
-#накопленная считается так: (1 + инфл январь) * (1 + инфл февраль) * и тд
-# инфляция должна быть в долях, а не процентах, те 0.05 а не 5%
-infl_total = 1
-for elem in infl_perc_month:
-    infl_total *= (1+ elem)
-infl_total -= 1
 
-print("Рост затрат за период составил: ", str(round((infl_total * 100), 2)) + "%")
-print("Средняя: ", str(round((statistics.mean(cost) / cost[0] - 1) * 100, 2)) + "%")
-print("Медиана: ", str(round((statistics.median(cost) / cost[0] - 1) * 100, 2)) + "%")
-print("Отклонение: ", str(round(statistics.pstdev(cost), 2)) + "%")
+counter = 0
+sum_was = 0
+sum_is = 0
+while counter < len(cost):
+    sum_was += cost[0]
+    sum_is += cost[counter]
+    counter += 1
+
+infl_total = (sum_is / sum_was) * 100 - 100
+dev = round(statistics.pstdev(infl_perc_month), 2)
+print(sum_was)
+print(sum_is)
+print("Общий рост расходов за период: ", str(round(infl_total, 2)) + "%")
+print("Средняя динамика по месяцам: ", str(round(statistics.mean(infl_perc_month), 2)) + "%")
+print("Отклонение: ", str(dev) + "%")
 print(infl_perc_month)
 """
 ///////////////////////////////////////////////////
 """
 
 """
-отрисовка графика
+отрисовка графика всех данных
 """
 fig, ax = plt.subplots()
-plt.title('Динамика затрат по месяцам в рублях')
+plt.title('Динамика затрат по месяцам')
 plt.xlabel("Месяц")
-plt.ylabel("Затраты(руб)")
-ax.plot(month, cost, 'o-', linewidth=2.0, color = 'red', markeredgecolor='black',
-        markerfacecolor='blue')
+plt.ylabel("Затраты(рост/падение) %")
+#ax.plot(month, infl_perc_month, 'o-', linewidth=2.0, color = 'red', markeredgecolor='black', markerfacecolor='blue', label = 'динамика затрат')
+#отрисовка линий стандартного отклонения
+#ax.axhline(dev, linewidth=2, color='b')
+#ax.axhline((dev * (-1)), linewidth=2, color='b', label = 'Границы нормальности')
+counter = 0
+colors = []
+while counter < len(infl_perc_month):
+    if infl_perc_month[counter] < 0:
+        colors.append('red')
+    if infl_perc_month[counter] >= 0:
+        colors.append('blue')
+    counter += 1
+
+bars = []
+bars = ax.bar(month, infl_perc_month, color = colors, edgecolor="black")
+ax.axhline(dev, linewidth=2, color='black')
+ax.axhline((dev * (-1)), linewidth=2, color='black', label = 'Границы нормальности')
+
+ax.bar_label(bars)
 
 ax.grid()
+ax.legend()
 plt.show()
 """
 ////////////////////////////////////////////////////
 """
+
 
