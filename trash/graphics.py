@@ -9,6 +9,7 @@ import random
 import tkinter as tk
 from tkinter import ttk
 import sys
+from tkinter import *
 
 
 """
@@ -17,14 +18,16 @@ import sys
 
 x = []
 y = []
+customize_button_clicked  = 0
 #Чтение файла .csv
 def read():
     with open("in.csv", 'r') as f:
-        reader = csv.reader(f)
+        reader = csv.reader(f, delimiter = ';')
         for row in reader:
             x.append(str(row[0]))
             y.append(float(row[1]))
-#обработчики кнопок
+            
+#обработчики кнопок 
 """
 суть едина:
 - очищаем canvas от того, что в нем было
@@ -242,7 +245,33 @@ def data_set_button_click():
     simple_graphic_button_click()
 #когда - нибудь я сделаю кастомизацию графиков=)))
 def graphics_customization_button_click():
-    print(1)
+    customize_button_clicked = 1
+    #создаем окно
+    custom_window = Toplevel()
+    #задаем заголовок окну, размер и сразу задаем полноэкранный режим
+    custom_window.title("Настройки графиков")
+    custom_window.geometry("540x480")
+    custom_window.resizable(False, False)
+    custom_frame_main = ttk.LabelFrame(master = custom_window, text = "Основные", borderwidth="10", relief="solid")
+    custom_frame_lines = ttk.LabelFrame(master = custom_window, text = "Вид линии", borderwidth="10", relief="solid")
+
+    enabled_central_lines = BooleanVar()
+    enabled_grid = BooleanVar()
+    enabled_grid.set(0)
+    enabled_central_lines.set(0)
+
+    enabled_simple_line = IntVar()
+    enabled_simple_line.set(1)
+
+    custom_frame_main.grid(row="0",column="0",sticky="w", padx = 5, pady = 5)
+    custom_frame_lines.grid(row="1",column="0",sticky="w", padx = 5, pady = 5)
+    show_grid_checkbox = tk.Checkbutton(master = custom_frame_main, text="Включить сетку", variable=enabled_grid).grid(row="0", sticky="w", pady = 5)
+    show_central_lines = tk.Checkbutton(master = custom_frame_main, text="Отображать центральное положение", variable=enabled_central_lines).grid(row="1", sticky="w", pady = 5)
+
+    set_simple_line = tk.Radiobutton(master = custom_frame_lines, text="Линия", variable=enabled_simple_line, value = 1).grid(row="0", sticky="w", pady = 5)
+    set_dot_line = tk.Radiobutton(master = custom_frame_lines, text="Пуктир", variable=enabled_simple_line, value = 2).grid(row="1", sticky="w", pady = 5)
+
+    custom_window.grab_set() 
     
     
     
@@ -260,7 +289,7 @@ read()
 #создаем фрейм для кнопок
 frame = ttk.LabelFrame(master = window, text = "Графики", borderwidth="10", relief="solid")
 #создаем фрейм для отрисовки графика
-frame1 = ttk.Frame(master = window, borderwidth="10", relief="solid", width = 1500, height = 800)
+frame1 = ttk.Frame(master = window, borderwidth="10", relief="solid")
 #создает фрейм для опций и настроек
 frame2 = ttk.LabelFrame(master = window, text = "Опции", borderwidth="10", relief="solid")
 #создаем кнопки в фрейме frame
@@ -278,7 +307,7 @@ max_min_label = tk.Label(frame,text = "Размах выборки: " + str(min(
 
 
 data_set_button = tk.Button(frame2,text = "Обновить dataset",width = "25", command = data_set_button_click).grid(row="0", sticky="w", pady = 5)
-#graphics_customization_button = tk.Button(frame2,text = "Настройки графиков",width = "25", command = graphics_customization_button_click).grid(row="1", sticky="w", pady = 5)
+graphics_customization_button = tk.Button(frame2,text = "Настройки графиков",width = "25", command = graphics_customization_button_click).grid(row="1", sticky="w", pady = 5)
 #размещаем оба фрейма на окне
 frame.grid(row="0",column="0",sticky="nw")
 frame1.grid(row="0",column="1", sticky="n")
