@@ -130,7 +130,6 @@ def main(command):
         writer.writerow(end_data_out + end_data_c)
         writer.writerow(price_out + price_c)
         writer.writerow(last_doh_out + last_doh_c)
-        writer.writerow(nominal_out + nominal_c)
         writer.writerow(summa_babla_year_out + summa_babla_year)
         writer.writerow(summa_babla_all_out + summa_babla_all)
         writer.writerow(count_bonds_final + count_bonds)
