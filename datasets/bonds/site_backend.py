@@ -1,6 +1,7 @@
 import csv
 import statistics
 import matplotlib.pyplot as plt
+import html_engine as eng
 
 
 #читаем исходный файл 
@@ -29,7 +30,7 @@ def count_metrics(price, doh, volume, metrics):
     mean_volume = str(mean_volume)
     metrics["mean_volume"] = mean_volume[0:3]
     print(metrics)
-
+#генерация графика динамики цены
 def price_dynamics(data, price):
     fig = plt.figure(figsize=(25,10))
     ax = fig.add_subplot()
@@ -38,8 +39,8 @@ def price_dynamics(data, price):
     plt.xticks(rotation="vertical")
     ax.plot(data, price, '-bo', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/site/price_dynamic.png')
-
+    plt.savefig('result/price_dynamic.png')
+#генерация графика динамики доходности
 def doh_dynamics(data, doh):
     fig = plt.figure(figsize=(25,10))
     ax = fig.add_subplot()
@@ -48,8 +49,8 @@ def doh_dynamics(data, doh):
     plt.xticks(rotation="vertical")
     ax.plot(data, doh, '-ro', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/site/doh_dynamic.png')
-
+    plt.savefig('result/doh_dynamic.png')
+#генерация графика динамики объема
 def volume_dynamics(data, volume):
     fig = plt.figure(figsize=(25,10))
     ax = fig.add_subplot()
@@ -58,8 +59,51 @@ def volume_dynamics(data, volume):
     plt.xticks(rotation="vertical")
     ax.plot(data, volume, '-go', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/site/volume_dynamic.png')
+    plt.savefig('result/volume_dynamic.png')
 
+
+'''
+генерация главной страницы сайта
+'''
+#создание файла и запись заголовка
+def page_init(file):
+    eng.init(file)
+    eng.init_main(file)
+#блок общих данных статистики
+def common_block(file, arg, metrics):
+    eng.h2(file, arg)
+    eng.print_p("Cредняя цена: " + str(metrics['mean_price']) + "%", file)
+    eng.print_p("Cредняя доходность: " + str(metrics['mean_doh']) + "%", file)
+    eng.print_p("Cредний объем торгов: " + str(metrics['mean_volume']) + " млрд. руб.", file)
+    eng.div_close(file)
+    eng.div_close(file)
+    
+#блок ссылок на архив ежедневных отчетов
+def report_block(file, links, texts):
+    eng.report_block(file)
+    counter = 0
+    while counter < len(links):
+        eng.p_open(file)
+        eng.href(file, links[counter], texts[counter])
+        eng.p_close(file)
+        counter += 1
+    eng.div_close(file)
+    eng.div_close(file)
+
+#блок графиков общих данных
+def dinamic_block(file):
+    eng.dinamic_block(file)
+    eng.print_p("Cредняя цена: " + " ", file)
+    eng.print_img("site/price_dynamic.png", "Цена", file)
+    eng.print_p("Cредняя доходность: " + " ", file)
+    eng.print_img("site/doh_dynamic.png", "Цена", file)
+    eng.print_p("Объем торгов: " + " ", file)
+    eng.print_img("site/volume_dynamic.png", "Цена", file)
+    eng.div_close(file)
+    eng.div_close(file)
+    eng.div_close(file)
+    eng.close_document(file)
+    
     
 
 data = []
@@ -67,12 +111,32 @@ price = []
 doh = []
 volume = []
 metrics = {}
+file = 'result/main.html'
+links = []
+texts = []
 #читаем из файла сырые данные
 read(price, doh, volume, data)
 count_metrics(price, doh, volume, metrics)
 price_dynamics(data, price)
 doh_dynamics(data, doh)
 volume_dynamics(data, volume)
+page_init(file)
+
+arg = str(data[len(data) - 1])
+common_block(file, arg, metrics)
+
+links.append("01_01.html")
+links.append("01_02.html")
+links.append("01_03.html")
+
+texts.append("01.01 - 07.01")
+texts.append("08.01 - 14.01")
+texts.append("15.01 - 21.01")
+
+report_block(file, links, texts)
+dinamic_block(file)
+
+
 
 
 
