@@ -40,7 +40,7 @@ def header(file):
   
   
  </head>
- <body>''')
+ <body bgcolor="#FFFACD">''')
 
 def init_main(file):
     with open(file, 'a', encoding='utf-8') as f:
@@ -55,19 +55,18 @@ def init_main(file):
 
 
 </head>
- <body>
+ <body bgcolor="#FFFACD">
  <h1> Статистика ОФЗ </h1>
- <div class=block_parent>
  <div class = "common_block">''' + '\n')
     
 def h2(file, arg):
     with open(file, 'a', encoding='utf-8') as f:
-        f.write(''' <h2>Общие данные за ''' + arg + '''</h2>''' + '\n'  + ''' <div class = "common_text">''' + '\n')
+        f.write(''' <h2>Общие данные на ''' + arg + ''':</h2>''' + '\n'  + ''' <div class = "common_text">''' + '\n')
 
 def report_block(file):
     with open(file, 'a', encoding='utf-8') as f:
         f.write(''' <div class = "report_block">
-<h2> Отчетные периоды </h2>
+<h2> Отчеты по датам: </h2>
 <div class = "report_text">''' + '\n')
 
 def dinamic_block(file):

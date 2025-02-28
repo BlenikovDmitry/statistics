@@ -2,6 +2,7 @@ import csv
 import statistics
 import matplotlib.pyplot as plt
 import html_engine as eng
+import os
 
 
 #читаем исходный файл 
@@ -29,7 +30,7 @@ def count_metrics(price, doh, volume, metrics):
     #для сокращения
     mean_volume = str(mean_volume)
     metrics["mean_volume"] = mean_volume[0:3]
-    print(metrics)
+
 #генерация графика динамики цены
 def price_dynamics(data, price):
     fig = plt.figure(figsize=(25,10))
@@ -39,7 +40,7 @@ def price_dynamics(data, price):
     plt.xticks(rotation="vertical")
     ax.plot(data, price, '-bo', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/price_dynamic.png')
+    plt.savefig('result/site/price_dynamic.png')
 #генерация графика динамики доходности
 def doh_dynamics(data, doh):
     fig = plt.figure(figsize=(25,10))
@@ -49,7 +50,7 @@ def doh_dynamics(data, doh):
     plt.xticks(rotation="vertical")
     ax.plot(data, doh, '-ro', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/doh_dynamic.png')
+    plt.savefig('result/site/doh_dynamic.png')
 #генерация графика динамики объема
 def volume_dynamics(data, volume):
     fig = plt.figure(figsize=(25,10))
@@ -59,7 +60,7 @@ def volume_dynamics(data, volume):
     plt.xticks(rotation="vertical")
     ax.plot(data, volume, '-go', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
-    plt.savefig('result/volume_dynamic.png')
+    plt.savefig('result/site/volume_dynamic.png')
 
 
 '''
@@ -82,11 +83,12 @@ def common_block(file, arg, metrics):
 def report_block(file, links, texts):
     eng.report_block(file)
     counter = 0
+    eng.p_open(file)
     while counter < len(links):
-        eng.p_open(file)
         eng.href(file, links[counter], texts[counter])
-        eng.p_close(file)
+        #eng.p_close(file)
         counter += 1
+    eng.p_close(file)
     eng.div_close(file)
     eng.div_close(file)
 
@@ -101,8 +103,23 @@ def dinamic_block(file):
     eng.print_img("site/volume_dynamic.png", "Цена", file)
     eng.div_close(file)
     eng.div_close(file)
-    eng.div_close(file)
     eng.close_document(file)
+#получаем список файлов директории для генерации ссылок на отчеты
+def get_reports():
+    # Получаем список файлов
+    files = os.listdir(report_dir)
+    # Выводим список файлов
+    return files
+    
+def gen_report_links():
+    files = get_reports()
+    for elem in files:
+        if elem[9:13] == 'html':
+            links.append(elem)
+            link_text = elem[0:8]
+            texts.append(link_text)
+    links.append('archive.html')
+    texts.append('Архив')
     
     
 
@@ -112,6 +129,7 @@ doh = []
 volume = []
 metrics = {}
 file = 'result/main.html'
+report_dir = "result"
 links = []
 texts = []
 #читаем из файла сырые данные
@@ -124,17 +142,14 @@ page_init(file)
 
 arg = str(data[len(data) - 1])
 common_block(file, arg, metrics)
+gen_report_links()
 
-links.append("01_01.html")
-links.append("01_02.html")
-links.append("01_03.html")
 
-texts.append("01.01 - 07.01")
-texts.append("08.01 - 14.01")
-texts.append("15.01 - 21.01")
 
 report_block(file, links, texts)
 dinamic_block(file)
+
+
 
 
 
