@@ -56,12 +56,12 @@ def init_main(file):
 
 </head>
  <body bgcolor="#FFFACD">
- <h1> Статистика ОФЗ </h1>
+ <h1> Сервер статистики по ОФЗ </h1>
  <div class = "common_block">''' + '\n')
     
 def h2(file, arg):
     with open(file, 'a', encoding='utf-8') as f:
-        f.write(''' <h2>Общие данные на ''' + arg + ''':</h2>''' + '\n'  + ''' <div class = "common_text">''' + '\n')
+        f.write(''' <h2>Общие данные ''' + arg + ''':</h2>''' + '\n'  + ''' <div class = "common_text">''' + '\n')
 
 def report_block(file):
     with open(file, 'a', encoding='utf-8') as f:

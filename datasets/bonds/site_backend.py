@@ -25,11 +25,10 @@ def read(price, doh, volume, data):
 def count_metrics(price, doh, volume, metrics):
     metrics["mean_price"] = round(statistics.mean(price), 2)
     metrics["mean_doh"] = round(statistics.mean(doh), 2)
-    mean_volume = statistics.mean(volume)
-    #средний объем переводим в строку, чтобы отрезать первые три символа
-    #для сокращения
+    mean_volume = round(statistics.mean(volume), 0)
+
     mean_volume = str(mean_volume)
-    metrics["mean_volume"] = mean_volume[0:3]
+    metrics["mean_volume"] = mean_volume
 
 #генерация графика динамики цены
 def price_dynamics(data, price):
@@ -75,7 +74,7 @@ def common_block(file, arg, metrics):
     eng.h2(file, arg)
     eng.print_p("Cредняя цена: " + str(metrics['mean_price']) + "%", file)
     eng.print_p("Cредняя доходность: " + str(metrics['mean_doh']) + "%", file)
-    eng.print_p("Cредний объем торгов: " + str(metrics['mean_volume']) + " млрд. руб.", file)
+    eng.print_p("Cредний объем торгов: " + str(metrics['mean_volume']) + " руб.", file)
     eng.div_close(file)
     eng.div_close(file)
     
@@ -86,7 +85,6 @@ def report_block(file, links, texts):
     eng.p_open(file)
     while counter < len(links):
         eng.href(file, links[counter], texts[counter])
-        #eng.p_close(file)
         counter += 1
     eng.p_close(file)
     eng.div_close(file)
@@ -110,7 +108,7 @@ def get_reports():
     files = os.listdir(report_dir)
     # Выводим список файлов
     return files
-    
+#генерация блока, содержащего ежедневные отчеты   
 def gen_report_links():
     files = get_reports()
     for elem in files:
@@ -134,13 +132,21 @@ links = []
 texts = []
 #читаем из файла сырые данные
 read(price, doh, volume, data)
+#подсчитываем метрики для вывода в блок общих данных
 count_metrics(price, doh, volume, metrics)
+#генерация графика динамики цены
 price_dynamics(data, price)
+#генерация графика динамики доходности
 doh_dynamics(data, doh)
+#генерация графика динамики объема торгов
 volume_dynamics(data, volume)
+'''
+генерация главной страницы
+'''
 page_init(file)
-
-arg = str(data[len(data) - 1])
+date_start = str(data[0])
+date_end = str(data[len(data) - 1])
+arg = " c " + date_start + " по " + date_end
 common_block(file, arg, metrics)
 gen_report_links()
 
@@ -148,6 +154,9 @@ gen_report_links()
 
 report_block(file, links, texts)
 dinamic_block(file)
+'''
+///////////////////////////////
+'''
 
 
 
