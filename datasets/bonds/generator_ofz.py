@@ -3,27 +3,28 @@ import html_engine as eng
 '''
 Здесь прописываем генерацию страницы
 '''
-
+#заголовок страницы
 def init(arg, file):
     eng.init(file)
     eng.header(file)
-    eng.print_p("Статистика за " + str(arg), file)
-    eng.print_p("ОФЗ:", file)
-    eng.print_table_start(file)
+    eng.h1_report("Статистика ОФЗ за " + str(arg), file)
+    #eng.print_p("Статистика ОФЗ за " + str(arg), file)
+    #eng.print_p("ОФЗ:", file)
+    #eng.print_table_start(file)
 
 
-
+#вывод таблицы на страницу(!не используется)
 def table(arg, file):
     eng.print_tr_start(file)
     for elem in arg:
         eng.print_td(str(elem),file)
     eng.print_tr_end(file)
-
+#заголовок таблицы общих показателей
 def statistic_header(file):
-    eng.print_table_end(file)
+    #eng.print_table_end(file)
     eng.print_p("Показатели:", file)
     eng.print_table_start(file)
-
+#таблица общих показателей
 def statistic_body(data, file):
     eng.print_tr_start(file)
     eng.print_td("Средняя ставка купона", file)
@@ -36,7 +37,7 @@ def statistic_body(data, file):
     eng.print_tr_end(file)
     table(data, file)
     eng.print_table_end(file)
-    
+#вывод графиков показателей    
 def graphics(file, file_name):
     eng.print_p("Цена:", file)
     eng.print_img("site/" + file_name + "price_ofz.png", "цена облигаций", file)

@@ -1,7 +1,6 @@
 '''
 здесь функции генерации
-ВАЖНО! Здесь только определяем функции генерации, сама генерация
-в файле generator.py
+ВАЖНО! Здесь только определяем функции генерации, сама генерация пишется отдельно
 '''
 
 def init(file):
@@ -34,6 +33,11 @@ def header(file):
 	text-align: center;
 	margin: auto; 
 	}
+     h1 {color: black;
+  border-width:3;
+  border-style:solid;
+  text-align:center;
+  background-color:#FF8C00;
 	
  
   </style> 
@@ -108,9 +112,13 @@ def close_document(file):
 
 def floor(file):
     with open(file, 'a', encoding='utf-8') as f:
+        f.write(''' <h1> <a href= index.html>На главную</a></h1>''')
         f.write(''' </body>
                     </html>
 ''')
+def h1_report(arg, file):
+    with open(file, 'a', encoding='utf-8') as f:
+        f.write("<h1>" + arg + "</h1>" + '\n')
 
 
 def print_p(arg, file):
