@@ -38,6 +38,21 @@ def header(file):
   border-style:solid;
   text-align:center;
   background-color:#FF8C00;
+  
+  a:link {
+  color: #0000FF; 
+  border-bottom: 1px; 
+}
+a:visited {
+  color: #00008B;
+}
+a:hover {
+  color: #800000; 
+  border-bottom: .07em solid;
+}
+a:active {
+  color: #00008B; 
+  border-bottom: 1px;
 	
  
   </style> 
