@@ -94,10 +94,13 @@ def report_block(file, links, texts):
 def dinamic_block(file):
     eng.dinamic_block(file)
     eng.print_p("Cредняя цена: " + " ", file)
+    eng.href_download(file, "site/price_dynamic.png", "Скачать")
     eng.print_img("site/price_dynamic.png", "Цена", file)
     eng.print_p("Cредняя доходность: " + " ", file)
+    eng.href_download(file, "site/doh_dynamic.png", "Скачать")
     eng.print_img("site/doh_dynamic.png", "Цена", file)
     eng.print_p("Объем торгов: " + " ", file)
+    eng.href_download(file, "site/volume_dynamic.png", "Скачать")
     eng.print_img("site/volume_dynamic.png", "Цена", file)
     eng.div_close(file)
     eng.div_close(file)
@@ -126,7 +129,7 @@ price = []
 doh = []
 volume = []
 metrics = {}
-file = 'result/main.html'
+file = 'result/index.html'
 report_dir = "result"
 links = []
 texts = []

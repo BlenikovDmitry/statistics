@@ -98,6 +98,11 @@ def dinamic_block(file):
 def href(file, link, text):
     with open(file, 'a', encoding='utf-8') as f:
         f.write('''<a href= ''' + link + '''>''' + text + '''</a>''' + '\n')
+        
+def href_download(file, link, text):
+    with open(file, 'a', encoding='utf-8') as f:
+        f.write('''<a href=''' + link + ''' download>''' + text + '''</a>''' + '\n')
+
     
 
 def div_close(file):
