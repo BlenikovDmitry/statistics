@@ -18,44 +18,7 @@ def header(file):
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Отчет</title>
   
-   <style type="text/css">
-   
-   P { 
-    font-size: 40px;
-	font-weight: bold;
-	text-align: center;
-   }
-   TD {
-    padding: 3px; 
-    border: 1px solid black; 
-	}
-	TABLE {
-	text-align: center;
-	margin: auto; 
-	}
-     h1 {color: black;
-  border-width:3;
-  border-style:solid;
-  text-align:center;
-  background-color:#FF8C00;
-  
-  a:link {
-  color: #0000FF; 
-  border-bottom: 1px; 
-}
-a:visited {
-  color: #00008B;
-}
-a:hover {
-  color: #800000; 
-  border-bottom: .07em solid;
-}
-a:active {
-  color: #00008B; 
-  border-bottom: 1px;
-	
- 
-  </style> 
+    <link rel="stylesheet" href="styles.css">
   
   
  </head>
@@ -121,6 +84,10 @@ def close_document(file):
     with open(file, 'a', encoding='utf-8') as f:
         f.write("</body>" + '\n')
         f.write("</html>" + '\n')
+
+def print_p_main(arg, file):
+    with open(file, 'a', encoding='utf-8') as f:
+        f.write("<p>" + arg + "</p>" + '\n')
     
     
 '''
@@ -143,7 +110,7 @@ def h1_report(arg, file):
 
 def print_p(arg, file):
     with open(file, 'a', encoding='utf-8') as f:
-        f.write("<p>" + arg + "</p>" + '\n')
+        f.write("<p class = report_p>" + arg + "</p>" + '\n')
 def print_table_start(file):
     with open(file, 'a', encoding='utf-8') as f:
         f.write("<table>" + '\n')

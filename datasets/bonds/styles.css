@@ -76,3 +76,20 @@ a:hover {
 a:active {
   color: #00008B; 
 }
+ .report_p { 
+    font-size: 40px;
+	font-weight: bold;
+	text-align: center;
+ }
+  TD {
+    padding: 3px; 
+    border: 1px solid black; 
+	}
+TABLE {
+	text-align: center;
+	margin: auto; 
+	}
+	P {
+		text-align: center;
+	}		
+	

@@ -46,6 +46,7 @@ def graphics(file, file_name):
     eng.p_open(file)
     eng.href_download(file, "site/" + file_name+"price_ofz.png", "Скачать")
     eng.print_img("site/" + file_name + "price_ofz.png", "цена облигаций", file)
+    eng.p_close(file)
     eng.print_p("Купонная доходность:", file)
     eng.p_open(file)
     eng.href_download(file, "site/" + file_name+"kupon_ofz.png", "Скачать")
