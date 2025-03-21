@@ -37,7 +37,23 @@ ofz['Ставка купона'] = ofz['Ставка купона'].fillna(round
 missing_values = ofz.isnull().sum()
 '''print(missing_values)'''
        
-#выводим в файл
-ofz.to_csv('ofz_cleared.csv', encoding = 'Windows-1251')
+#выводим в файл все данные очищенные
+ofz.to_csv('ofz_cleared_all.csv', encoding = 'Windows-1251')
 
-'''print(ofz.dtypes)'''
+#фильтруем данные по доходности последней сделки  и выводим в отдельный файл
+#доходность последней сделки должна быть больше нуля и меньше 2-х стандартных отклонений, чтобы отсечь выбросы
+selected_data = ofz[ofz['Дох посл сделки'] > 0]
+selected_data = selected_data[selected_data['Дох посл сделки'] < selected_data['Дох посл сделки'].std() * 2].loc[:,['Наименование','Цена % средневзвешенная', 'Сделок шт.', 'Дох посл сделки','Ставка купона', 'Объем в валюте']]
+
+selected_data.to_csv('ofz_cleared.csv', encoding = 'Windows-1251')
+
+#подсчет статистик по очищенным данным
+statistics = pd.DataFrame(columns=['Средняя ставка купона', 'Отклонение средней ставки купона', 'Средняя цена', 'Отклонение средней цены', 'Объем торгов в рублях'])
+statistics.loc['1'] = [selected_data['Ставка купона'].mean(),selected_data['Ставка купона'].std(),selected_data['Цена % средневзвешенная'].mean(),
+                       selected_data['Цена % средневзвешенная'].std(),selected_data['Объем в валюте'].sum()]
+
+
+#выводим в файл статистики
+statistics.to_csv('statistics.csv', encoding = 'Windows-1251')
+
+
