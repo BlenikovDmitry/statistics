@@ -7,8 +7,6 @@ import random
 """
 Анализ исторических значений
 Рассчитываем среднее, медиану ,стандартное отклонение
-Если медиана и среднее различаются более чем на 10%, отбрасываем минимум и максимум
-от выборки, пока ср и мед не сойдутся
 
 Бутстрапируем полученную выборку, отрисовываем распределение среднего и
 стандартного отклонения(10.000 итераций)
@@ -77,12 +75,12 @@ def bootstrap(data, markers, data_result):
     fig = plt.figure(figsize=(6,6))
     ax = fig.add_subplot(2,2,1)
     ax.set_title("Распределение среднего")
-    ax.hist(distribution_average, 50, color = "red", ec="lightblue")
+    ax.hist(distribution_average, 50, color = "red", ec="lightblue", edgecolor="black", rwidth = 5)
     ax.grid()
     
     ax = fig.add_subplot(2,2,2)
     ax.set_title("Распределение стандартного отклонения")
-    ax.hist(distribution_stde, 50, color = "lightblue", ec="red")
+    ax.hist(distribution_stde, 50, color = "lightblue", ec="red", edgecolor="black", rwidth = 5)
     ax.grid()
 
 
@@ -93,8 +91,7 @@ def bootstrap(data, markers, data_result):
     ax = fig.add_subplot(2,1,2)
     ax.set_title("Выборка")
     plt.xticks(rotation="vertical")
-    ax.plot(markers, data, color = "blue")
-    #ax.plot(markers, data_result, color = "red")
+    ax.plot(markers, data, '-bo', linewidth=2, markersize=6, markerfacecolor='black')
     plt.axhline(average_average + average_stde, color = "green")
     plt.axhline(average_average - average_stde, color = "green")
     plt.legend (('Факт', 'Возможный коридор'))
@@ -128,27 +125,11 @@ stde = statistics.stdev(data)
 min1 = 0
 max1 = 0
 index = 0
-while (1-average/median) >= 0.1 or (1-median/average) >= 0.1:
-    index = data.index(min(data))
-    data_eject.append(min(data))
-    markers_eject.append(markers[index])
-    data.remove(min(data))
-    markers.pop(index)
-    index = data.index(max(data))
-    data_eject.append(max(data))
-    markers_eject.append(markers[index])
-    data.remove(max(data))
-    markers.pop(index)
-    average = statistics.mean(data)
-    median = statistics.median(data)
-    stde = statistics.stdev(data)
 
-#prognozis(data, markers, data_result)
+
 bootstrap(data, markers, data_result)
 
 
-print("отброшенная выборка")
-print(data_eject)
 
 
 
