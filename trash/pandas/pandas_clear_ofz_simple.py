@@ -49,8 +49,8 @@ selected_data.to_csv('ofz_cleared.csv', encoding = 'Windows-1251')
 
 #подсчет статистик по очищенным данным
 statistics = pd.DataFrame(columns=['Средняя ставка купона', 'Отклонение средней ставки купона', 'Средняя цена', 'Отклонение средней цены', 'Объем торгов в рублях'])
-statistics.loc['1'] = [selected_data['Ставка купона'].mean(),selected_data['Ставка купона'].std(),selected_data['Цена % средневзвешенная'].mean(),
-                       selected_data['Цена % средневзвешенная'].std(),selected_data['Объем в валюте'].sum()]
+statistics.loc['1'] = [round(selected_data['Ставка купона'].mean(), 2),round(selected_data['Ставка купона'].std(),2),round(selected_data['Цена % средневзвешенная'].mean(),2),
+                       round(selected_data['Цена % средневзвешенная'].std(),2),selected_data['Объем в валюте'].sum()]
 
 
 #выводим в файл статистики
