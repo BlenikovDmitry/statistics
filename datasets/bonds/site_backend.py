@@ -21,14 +21,16 @@ def read(price, doh, volume, data):
         data.pop(0)
             
             
-#считаем средние метрики           
+#считаем метрики
+# так как бралось среднее от среднего, принял решение брать не среднее значение
+# в метрику, а последнее
 def count_metrics(price, doh, volume, metrics):
-    metrics["mean_price"] = round(statistics.mean(price), 2)
-    metrics["mean_doh"] = round(statistics.mean(doh), 2)
-    mean_volume = round(statistics.mean(volume), 0)
+    metrics["price"] = round(price[len(price) - 1], 2)
+    metrics["doh"] = round(doh[len(doh) - 1], 2)
+    last_volume = round(volume[len(volume) - 1], 0)
 
-    mean_volume = str(mean_volume)
-    metrics["mean_volume"] = mean_volume
+    last_volume = str(last_volume)
+    metrics["volume"] = last_volume
 
 #генерация графика динамики цены
 def price_dynamics(data, price):
@@ -72,9 +74,9 @@ def page_init(file):
 #блок общих данных статистики
 def common_block(file, arg, metrics):
     eng.h2(file, arg)
-    eng.print_p_main("Cредняя цена: " + str(metrics['mean_price']) + "%", file)
-    eng.print_p_main("Cредняя доходность: " + str(metrics['mean_doh']) + "%", file)
-    eng.print_p_main("Cредний объем торгов: " + str(metrics['mean_volume']) + " руб.", file)
+    eng.print_p_main("Cредняя цена: " + str(metrics['price']) + "%", file)
+    eng.print_p_main("Cредняя доходность: " + str(metrics['doh']) + "%", file)
+    eng.print_p_main("Cредний объем торгов: " + str(metrics['volume']) + " руб.", file)
     eng.div_close(file)
     eng.div_close(file)
     
