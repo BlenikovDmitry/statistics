@@ -1,14 +1,12 @@
 import matplotlib.pyplot as plt
 import csv
 import statistics
-import numpy as np
 import gc
 
 """
-Скрипт считает распределение доходностей в облигациях, строит гистограмму
-Также делает простейший анализ(считает среднее ,медиану ,моду), чтобы показать , около каких значений группировка доходностей
-Для входа нужен файл .csv формата
-<название> <цена> <число бумаг> <купонная доходность>
+Скрипт считает распределение доходностей в облигациях относительно цены покупки, строит гистограмму
+Также делает простейший анализ(считает среднее ,медиану ,моду, стандартное отклонение), чтобы показать , около каких значений группировка доходностей
+Считает купонную доходность по выпускам и генерирует отдельный файл графика
 
 Принцип действия:
 - считываем данные
@@ -48,12 +46,6 @@ nominal.pop(0)
 coupon.pop(0)
 coupon_count.pop(0)
 
-'''print(bonds_name)
-print(bonds_price)
-print(bonds_count)
-print(nominal)
-print(coupon)
-print(coupon_count)'''
 
 """
 ////////////////////////////////////////////////////
@@ -91,13 +83,16 @@ while counter_upper < len(bonds_count):
         result.append(((coupon[counter_upper] * coupon_count[counter_upper]) / bonds_price[counter_upper]) * 100)
         counter += 1
     counter_upper += 1
-#центральное положение
+#центральное положение + стандартное отклонение
 print("среднее:" + str(round(statistics.mean(result),2)) + '%')
 print("медиана:" + str(round(statistics.mode(result),2)) + '%')
 print("мода:" + str(round(statistics.median(result),2)) + '%')
 print("Стандартное отклонение от среднего:" + str(round(statistics.stdev(result),2)) + '%')
 
 #после анализа приводим к int, формируем шкалу по оси X и отрисовывааем на графике, сохраняя в отдельный файл
+'''
+отдельно генерируем доходности относительно цены покупки и распределение купонной доходности
+'''
 counter = 0
 while counter < len(result):
     result[counter] = int(result[counter])
@@ -111,8 +106,8 @@ while counter < max(result):
     counter += 1
 
 fig, ax = plt.subplots(figsize=(25,10))
-plt.title("Распределение купонов")
-plt.xlabel("Купонная доходность")
+plt.title("Распределение доходности")
+plt.xlabel("Доходность")
 plt.ylabel("Число купленных бумаг")
 plt.xticks(x_ticks)
 
@@ -129,14 +124,6 @@ gc.collect()
 '''
 (купон * число выплат в год / номинал * 100%
 '''
-
-'''print(bonds_name)
-print(bonds_price)
-print(bonds_count)
-print(nominal)
-print(coupon)
-print(coupon_count)'''
-
 counter = 0
 interest = []
 while counter < len(bonds_name):
