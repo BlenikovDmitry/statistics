@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import csv
 import statistics
 import numpy as np
+import gc
 
 """
 Скрипт считает распределение доходностей в облигациях, строит гистограмму
@@ -65,6 +66,7 @@ while counter < len(bonds_count):
     coupon_count[counter] = int(coupon_count[counter])
     coupon[counter] = float(coupon[counter])
     bonds_price[counter] = float(bonds_price[counter]) * int(nominal[counter]) / 100
+    nominal[counter] = int(nominal[counter])
     counter += 1
 #сюда собираем все купоны в % для анализа и отрисовки на гистограмму
 result = []
@@ -90,9 +92,10 @@ while counter_upper < len(bonds_count):
         counter += 1
     counter_upper += 1
 #центральное положение
-print("среднее:" + str(round(statistics.mean(result),2)))
-print("медиана:" + str(statistics.mode(result)))
-print("мода:" + str(statistics.median(result)))
+print("среднее:" + str(round(statistics.mean(result),2)) + '%')
+print("медиана:" + str(round(statistics.mode(result),2)) + '%')
+print("мода:" + str(round(statistics.median(result),2)) + '%')
+print("Стандартное отклонение от среднего:" + str(round(statistics.stdev(result),2)) + '%')
 
 #после анализа приводим к int, формируем шкалу по оси X и отрисовывааем на графике, сохраняя в отдельный файл
 counter = 0
@@ -112,6 +115,39 @@ plt.title("Распределение купонов")
 plt.xlabel("Купонная доходность")
 plt.ylabel("Число купленных бумаг")
 plt.xticks(x_ticks)
-ax.hist(result,bins=len(bonds_count), linewidth=2, color = 'green', edgecolor="black", rwidth = 5)
+
+ax.hist(result,bins=len(bonds_name), linewidth=2, color = 'green', edgecolor="black", rwidth = 5)
+plt.axvline(round(statistics.mean(result),2),linewidth=4, color='r', label = "Средний купон")
+plt.legend()
 ax.grid()
 plt.savefig("interest_distribution.png")
+
+del result
+del counter_upper
+gc.collect()
+
+'''
+(купон * число выплат в год / номинал * 100%
+'''
+
+'''print(bonds_name)
+print(bonds_price)
+print(bonds_count)
+print(nominal)
+print(coupon)
+print(coupon_count)'''
+
+counter = 0
+interest = []
+while counter < len(bonds_name):
+    interest.append(round(coupon[counter] * coupon_count[counter] / nominal[counter] * 100,2))
+    counter += 1
+
+
+fig, ax = plt.subplots(figsize=(25,10))
+plt.xticks(rotation="vertical")
+ax.set_title("Распределение % купона по выпускам")
+bars = ax.bar(bonds_name, interest, linewidth = 3.0, color = 'blue', ec='red')
+ax.bar_label(bars)
+ax.grid()
+plt.savefig('coupon_distribution.png')
