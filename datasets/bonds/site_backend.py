@@ -10,15 +10,23 @@ def read(price, doh, volume, data):
     with open("result_ofz.csv", 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-            price.append(float(row[5]))
-            doh.append(float(row[3]))
-            volume.append(float(row[7]))
-            data.append(str(row[0]))
+            price.append(row[5])
+            doh.append(row[3])
+            volume.append(row[7])
+            data.append(row[0])
             
         price.pop(0)
         volume.pop(0)
         doh.pop(0)
         data.pop(0)
+
+        counter = 0
+        while counter < len(price):
+            price[counter] = float(price[counter])
+            doh[counter] = float(doh[counter])
+            volume[counter] = float(volume[counter])
+            counter += 1
+
             
             
 #считаем метрики
