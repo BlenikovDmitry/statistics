@@ -1,6 +1,8 @@
 import pandas as pd
 import gc
 import matplotlib.pyplot as plt
+from bootstraping import bootstrap
+
 
 
 '''
@@ -13,12 +15,11 @@ import matplotlib.pyplot as plt
 raw_set = pd.read_csv('cb.csv', encoding = 'Windows-1251', sep=';')
 
 
-'''print('Использование памяти: ' + str(raw_set.memory_usage(index = False).sum()))'''
-
 raw_set['Дата'] = raw_set['Дата'].astype('string')
 
 raw_set['Ключевая ставка, % годовых'] = raw_set['Ключевая ставка, % годовых'].str.replace(',', '.')
 raw_set['Инфляция, % г/г'] = raw_set['Инфляция, % г/г'].str.replace(',', '.')
+
 
 raw_set['Ключевая ставка, % годовых'] = raw_set['Ключевая ставка, % годовых'].astype('float32')
 raw_set['Инфляция, % г/г'] = raw_set['Инфляция, % г/г'].astype('float32')
@@ -48,6 +49,8 @@ gc.collect()
 '''
 строим графики кс и инфляции, накладывая их друг на друга
 генерируем результат в файл graphic.png
+также вызываем бутстрап из отдельного файла, который возвращает график
+графики сохраняем в отдельных файлах
 '''
 
 fig, ax = plt.subplots(figsize=(25,10))
@@ -62,5 +65,8 @@ plt.legend(['Ключевая ставка, % годовых', 'Инфляция
 ax.grid()
 plt.savefig('graphic.png')
 
-
-
+count_iterations = 10000
+plt = bootstrap(final_set['Ключевая ставка, % годовых'], count_iterations)
+plt.savefig('ks.png')
+plt = bootstrap(final_set['Инфляция, % г/г'], count_iterations)
+plt.savefig('infl.png')
