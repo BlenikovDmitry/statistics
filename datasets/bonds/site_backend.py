@@ -92,9 +92,9 @@ def page_init(file):
 #блок общих данных статистики
 def common_block(file, arg, metrics):
     eng.h2(file, arg)
-    eng.print_p_main("Cредняя цена: " + str(metrics['price']) + "%", file)
-    eng.print_p_main("Cредняя доходность: " + str(metrics['doh']) + "%", file)
-    eng.print_p_main("Cредний объем торгов: " + str(metrics['volume']) + " руб.", file)
+    eng.print_p_main("Текущая цена: " + str(metrics['price']) + "%", file)
+    eng.print_p_main("Текущая доходность: " + str(metrics['doh']) + "%", file)
+    eng.print_p_main("Текущий объем торгов: " + str(metrics['volume']) + " руб.", file)
     eng.div_close(file)
     eng.div_close(file)
     
