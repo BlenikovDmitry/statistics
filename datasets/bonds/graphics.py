@@ -87,6 +87,7 @@ def stats(markers, price,doh, volume):
     volume_med = statistics.median(volume)
     return price_med, doh_med,volume_med
 
+#генератор страницы
 def page_generator(markers, price,doh, volume, file_name, price_med,doh_med,volume_med, header, files_m):
     eng.init(file_name)
     eng.init_main_uni(file_name, header)
@@ -116,7 +117,7 @@ def page_generator(markers, price,doh, volume, file_name, price_med,doh_med,volu
     
     
         
-#логика проста: отрезаем кусочек данных за интересующий месяц и вызываем отрисовку графика
+#логика проста: отрезаем кусочек данных за интересующий месяц и вызываем отрисовку графика и генерацию страницы
 markers, price,doh,volume = sliser(ofz, '1')
 graphic(markers, price,doh,volume, path_jan)
 price_med, doh_med,volume_med = stats(markers, price,doh,volume)
