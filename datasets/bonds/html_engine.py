@@ -40,6 +40,23 @@ def init_main(file):
  <body bgcolor="#FFFACD">
  <h1> Сервер статистики по ОФЗ </h1>
  <div class = "common_block">''' + '\n')
+ 
+def init_main_uni(file, arg):
+     with open(file, 'a', encoding='utf-8') as f:
+         f.write('''<!doctype html>
+<html>
+  <head>
+  
+  <title> Анализ бондов</title>
+  <meta charset = "UTF-8">
+  
+  <link rel="stylesheet" href="styles.css">
+
+
+</head>
+ <body bgcolor="#FFFACD"> ''' + '\n')
+         f.write('''<h1>'''+ arg + ''' </h1>
+ <div class = "common_block">''' + '\n')
     
 def h2(file, arg):
     with open(file, 'a', encoding='utf-8') as f:
