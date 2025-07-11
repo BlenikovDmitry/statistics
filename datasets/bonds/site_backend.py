@@ -26,6 +26,16 @@ def read(price, doh, volume, data):
             doh[counter] = float(doh[counter])
             volume[counter] = float(volume[counter])
             counter += 1
+    #ограничиваем отрисовку графиков и подсчет статистик последними 100 значениями(чтобы график не расползался на главной)        
+    delimiter = len(price) - 100
+    counter = 0
+    while counter < delimiter:
+        price.pop(0)
+        volume.pop(0)
+        doh.pop(0)
+        data.pop(0)
+        
+        counter += 1
 
             
             
