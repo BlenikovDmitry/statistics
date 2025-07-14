@@ -1,5 +1,6 @@
 import csv
 import os
+import pandas as pd
 
 
 price = []
@@ -21,27 +22,48 @@ class paper:
         self.enddate = enddate
 
 
-isin = 'ru12345'
-price = [100,98,90]
-count = [12,13,14]
-doh = [10,11,12]
-coupon = 15
-volume = [1234567,123,45678]
-enddate = '12.03.2026'
 
-pap = paper(isin, price,count,doh,coupon,volume,enddate)
+def processing(paper_arr_names, paper_arr, raw_data, counter):
+    isin = []
+    price = []
+    count = []
+    doh = []
+    coupon = 0
+    volume = []
+    enddate = '0'
 
-'''print(pap.isin)
-print(pap.price[2])
-print(pap.count)
-print(pap.doh)
-print(pap.coupon)
-print(pap.volume[0])
-print(pap.enddate)'''
+    if raw_data.iloc[counter]['Наименование'] not in paper_arr_names:
+        paper_arr_names.append(raw_data.iloc[counter]['Наименование'])
+        isin.append(raw_data.iloc[counter]['Наименование'])
+        price.append(raw_data.iloc[counter]['Цена % средневзвешенная'])
+        count.append(raw_data.iloc[counter]['Сделок шт.'])
+        doh.append(raw_data.iloc[counter]['Дох посл сделки'])
+        coupon = raw_data.iloc[counter]['Ставка купона']
+        volume.append(raw_data.iloc[counter]['Объем в валюте'])
+        enddate = raw_data.iloc[counter]['Дата погашения']
+        pap = paper(isin, price,count,doh,coupon,volume,enddate)
+        paper_arr.append(pap)
+
+
+
+#pap = paper(isin, price,count,doh,coupon,volume,enddate)
+paper_arr = []
+paper_arr_names = []
+raw_data = []
 report_dir = 'result/site'
 files = os.listdir(report_dir)
 print(files[7][8:25])
 
+counter = 0
 for file in files:
     if file[8:25] == 'ofz_cleared_short':
-        #здесь пишем метод чтения и добавления/обновления данных в объект
+        raw_data = pd.read_csv('result/site/' +file, encoding = 'Windows-1251')
+        while counter < len(raw_data['Наименование']):
+            processing(paper_arr_names, paper_arr, raw_data, counter)
+           
+            counter += 1
+
+for elem in paper_arr:
+    print(elem.isin)
+    print(elem.doh)
+
