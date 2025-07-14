@@ -1,3 +1,4 @@
+
 import csv
 import os
 import pandas as pd
@@ -33,6 +34,7 @@ def processing(paper_arr_names, paper_arr, raw_data, counter):
     enddate = '0'
 
     if raw_data.iloc[counter]['Наименование'] not in paper_arr_names:
+        #print(raw_data.iloc[counter]['Наименование'])
         paper_arr_names.append(raw_data.iloc[counter]['Наименование'])
         isin.append(raw_data.iloc[counter]['Наименование'])
         price.append(raw_data.iloc[counter]['Цена % средневзвешенная'])
@@ -43,6 +45,8 @@ def processing(paper_arr_names, paper_arr, raw_data, counter):
         enddate = raw_data.iloc[counter]['Дата погашения']
         pap = paper(isin, price,count,doh,coupon,volume,enddate)
         paper_arr.append(pap)
+    else:
+        #print(1) тут пишем код апдейта
 
 
 
@@ -58,12 +62,13 @@ counter = 0
 for file in files:
     if file[8:25] == 'ofz_cleared_short':
         raw_data = pd.read_csv('result/site/' +file, encoding = 'Windows-1251')
+        counter = 0
         while counter < len(raw_data['Наименование']):
             processing(paper_arr_names, paper_arr, raw_data, counter)
            
             counter += 1
 
-for elem in paper_arr:
+'''for elem in paper_arr:
     print(elem.isin)
-    print(elem.doh)
+    print(elem.doh)'''
 
