@@ -21,11 +21,17 @@ class paper:
         self.coupon = coupon
         self.volume = volume
         self.enddate = enddate
+    def update(self, price, count, doh, volume):
+        self.price = price
+        self.count = count
+        self.doh = doh
+        self.volume = volume
+        
 
 
 
 def processing(paper_arr_names, paper_arr, raw_data, counter):
-    isin = []
+    isin = ''
     price = []
     count = []
     doh = []
@@ -36,7 +42,7 @@ def processing(paper_arr_names, paper_arr, raw_data, counter):
     if raw_data.iloc[counter]['Наименование'] not in paper_arr_names:
         #print(raw_data.iloc[counter]['Наименование'])
         paper_arr_names.append(raw_data.iloc[counter]['Наименование'])
-        isin.append(raw_data.iloc[counter]['Наименование'])
+        isin = raw_data.iloc[counter]['Наименование']
         price.append(raw_data.iloc[counter]['Цена % средневзвешенная'])
         count.append(raw_data.iloc[counter]['Сделок шт.'])
         doh.append(raw_data.iloc[counter]['Дох посл сделки'])
@@ -46,7 +52,26 @@ def processing(paper_arr_names, paper_arr, raw_data, counter):
         pap = paper(isin, price,count,doh,coupon,volume,enddate)
         paper_arr.append(pap)
     else:
-        #print(1) тут пишем код апдейта
+        #print(raw_data.iloc[counter]['Наименование'])
+        price.clear()
+        count.clear()
+        doh.clear()
+        coupon = 0
+        volume.clear()
+        enddate = '0'
+        for item in paper_arr:
+            #print(str(item.isin))
+            if item.isin == raw_data.iloc[counter]['Наименование']:
+                price = item.price.copy()
+                count = item.count.copy()
+                doh = item.doh.copy()
+                volume = item.volume.copy()
+                price.append(raw_data.iloc[counter]['Цена % средневзвешенная'])
+                count.append(raw_data.iloc[counter]['Сделок шт.'])
+                doh.append(raw_data.iloc[counter]['Дох посл сделки'])
+                volume.append(raw_data.iloc[counter]['Объем в валюте'])
+                item.update(price, count, doh, volume)
+                
 
 
 
