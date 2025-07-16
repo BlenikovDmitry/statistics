@@ -1,15 +1,9 @@
-
+import matplotlib.pyplot as plt
 import csv
 import os
 import pandas as pd
 
 
-price = []
-count = []
-doh = []
-
-
-paper = []
 
 '''
 основной класс, содержит данные по бумагам
@@ -118,12 +112,48 @@ def collect(report_dir):
                 processing(paper_arr_names, paper_arr, raw_data, counter, date)
                 counter += 1
 
+def graphic(markers, price,doh,volume, path):
+    fig = plt.figure(figsize=(25,10))
+    ax = fig.add_subplot()
+    plt.xlabel("Дата")
+    plt.ylabel("Цена")
+    plt.xticks(rotation="vertical")
+    ax.plot(markers, price, '-bo', linewidth=2, markersize=6, markerfacecolor='black')
+    ax.grid()
+    plt.savefig(path + 'price')
+    plt.clf()
+    plt.close()
+
+    fig = plt.figure(figsize=(25,10))
+    ax = fig.add_subplot()
+    plt.xlabel("Дата")
+    plt.ylabel("Доходность")
+    plt.xticks(rotation="vertical")
+    ax.plot(markers, doh, '-ro', linewidth=2, markersize=6, markerfacecolor='black')
+    ax.grid()
+    plt.savefig(path + 'doh')
+    plt.clf()
+    plt.close()
+
+    fig = plt.figure(figsize=(25,10))
+    ax = fig.add_subplot()
+    plt.xlabel("Дата")
+    plt.ylabel("Объем")
+    plt.xticks(rotation="vertical")
+    ax.plot(markers, volume, '-go', linewidth=2, markersize=6, markerfacecolor='black')
+    ax.grid()
+    plt.savefig(path + 'vol')
+    
+
+    plt.clf()
+    plt.close()
+    
 
 #переменная хранит путь к файлам
 report_dir = 'result/site'
 collect(report_dir)
 
-'''report_dir = 'result/archive/jan/site'
+report_dir = 'result/archive/jan/site'
 collect(report_dir)
 
 report_dir = 'result/archive/feb/site'
@@ -141,11 +171,18 @@ collect(report_dir)
 
 
 report_dir = 'result/archive/jun/site'
-collect(report_dir)'''
+collect(report_dir)
 
-for elem in paper_arr:
+'''for elem in paper_arr:
     print(elem.isin)
     print(elem.doh)
     print(elem.dates)
+'''
+
+for item in paper_arr:
+    os.mkdir('papers/'+item.isin)
+
+for item in paper_arr:
+    graphic(item.dates, item.price,item.doh,item.volume, 'papers/'+item.isin[0:len(item.isin) - 1] + '/')
 
 print(len(paper_arr))
