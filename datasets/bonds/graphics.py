@@ -90,7 +90,7 @@ def stats(markers, price,doh, volume):
 #генератор страницы
 def page_generator(markers, price,doh, volume, file_name, price_med,doh_med,volume_med, header, files_m):
     eng.init(file_name)
-    eng.init_main_uni(file_name, header)
+    eng.init_main_uni(file_name, header, header)
     arg = " c " + markers[0] + " по " + markers[len(markers) - 1]
     eng.h2(file_name,arg)
     eng.print_p_main("Cредняя цена: " + str(round(price_med,2)) + "%", file_name)

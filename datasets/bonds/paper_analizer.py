@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import csv
 import os
 import pandas as pd
+import html_engine as eng
 
 
 
@@ -147,42 +148,60 @@ def graphic(markers, price,doh,volume, path):
 
     plt.clf()
     plt.close()
-    
+
+
+#генератор страницы 
+def page_generator(file_fname, file_name, files_m):
+    eng.init(file_fname)
+    eng.init_main_uni(file_fname, file_name[0:len(file_name) - 1], file_name[0:len(file_name) - 1])
+    eng.print_p("Цена: " + " ", file_fname)
+    eng.print_img(file_name + files_m['price'], "Цена", file_fname)
+    eng.print_p("Доходность: " + " ", file_fname)
+    eng.print_img(file_name +files_m['doh'], "Цена", file_fname)
+    eng.print_p("Объем торгов: " + " ", file_fname)
+    eng.print_img(file_name + files_m['vol'], "Цена", file_fname)
+    eng.div_close(file_fname)
+    eng.div_close(file_fname)
+    eng.close_document(file_fname)
 
 #переменная хранит путь к файлам
-report_dir = 'result/site'
-collect(report_dir)
 
-report_dir = 'result/archive/jan/site'
+'''report_dir = 'result/archive/jan/site'
 collect(report_dir)
 
 report_dir = 'result/archive/feb/site'
 collect(report_dir)
 
 report_dir = 'result/archive/mar/site'
-collect(report_dir)
+collect(report_dir)'''
 #к сожалению данные short стали собираться только с апреля 2025 года
 report_dir = 'result/archive/apr/site'
 collect(report_dir)
 
 
-report_dir = 'result/archive/may/site'
+'''report_dir = 'result/archive/may/site'
 collect(report_dir)
 
 
 report_dir = 'result/archive/jun/site'
 collect(report_dir)
 
-'''for elem in paper_arr:
-    print(elem.isin)
-    print(elem.doh)
-    print(elem.dates)
-'''
+report_dir = 'result/site'
+collect(report_dir)'''
+
+
+
+'''for item in paper_arr:
+    os.mkdir('result/papers/'+item.isin)
 
 for item in paper_arr:
-    os.mkdir('papers/'+item.isin)
+    graphic(item.dates, item.price,item.doh,item.volume, 'result/papers/'+item.isin[0:len(item.isin) - 1] + '/')'''
 
+files_m = {'price': 'price.png', 'doh': 'doh.png', 'vol': 'vol.png'}
 for item in paper_arr:
-    graphic(item.dates, item.price,item.doh,item.volume, 'papers/'+item.isin[0:len(item.isin) - 1] + '/')
+    '''file_fname = 'result/papers/'+item.isin + '.html'
+    file_name = item.isin[0:len(item.isin) - 1] + '/'''
+    page_generator('result/papers/'+item.isin + '.html',item.isin[0:len(item.isin) - 1] + '/', files_m)
+
 
 print(len(paper_arr))

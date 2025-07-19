@@ -41,13 +41,13 @@ def init_main(file):
  <h1> Сервер статистики по ОФЗ </h1>
  <div class = "common_block">''' + '\n')
  
-def init_main_uni(file, arg):
+def init_main_uni(file, arg, title):
      with open(file, 'a', encoding='utf-8') as f:
          f.write('''<!doctype html>
 <html>
   <head>
   
-  <title> Анализ бондов</title>
+  <title> ''' +title + '''</title>
   <meta charset = "UTF-8">
   
   <link rel="stylesheet" href="styles.css">
