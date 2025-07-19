@@ -112,7 +112,9 @@ def collect(report_dir):
             while counter < len(raw_data['Наименование']):
                 processing(paper_arr_names, paper_arr, raw_data, counter, date)
                 counter += 1
-
+'''
+функция отрисовки графикоы цены, доходности и объема
+'''
 def graphic(markers, price,doh,volume, path):
     fig = plt.figure(figsize=(25,10))
     ax = fig.add_subplot()
@@ -150,7 +152,10 @@ def graphic(markers, price,doh,volume, path):
     plt.close()
 
 
-#генератор страницы 
+'''
+генератор индивидуальной страницы каждой бумаги
+'''
+
 def page_generator(file_fname, file_name, files_m):
     eng.init(file_fname)
     eng.init_main_uni(file_fname, file_name[0:len(file_name) - 1], file_name[0:len(file_name) - 1])
@@ -163,23 +168,54 @@ def page_generator(file_fname, file_name, files_m):
     eng.div_close(file_fname)
     eng.div_close(file_fname)
     eng.close_document(file_fname)
+'''
+генератор общей страницы которая содержит список всех торгующихся офзшек
+'''
+def page_generator_all_papers(file_name, paper_arr):
+    eng.init(file_name)
+    eng.init_main_uni(file_name, 'Все выпуски офз', 'Все выпуски офз')
+    eng.print_table_start(file_name)
 
+    eng.print_tr_start(file_name)
+    eng.print_td('Название', file_name)
+    eng.print_td('Дата погашения', file_name)
+
+    eng.print_tr_end(file_name)
+
+    for item in paper_arr:
+        eng.print_tr_start(file_name)
+        eng.print_td("<a href="+"'papers/" +item.isin + ".html'>" + item.isin + '</a>', file_name)
+        eng.print_td(item.enddate, file_name)
+        eng.print_tr_end(file_name)
+
+    
+    eng.print_table_end(file_name)
+    eng.div_close(file_name)
+    eng.floor(file_name)
+    eng.close_document(file_name)
+
+    
+    
+'''
+собираем данные по месяцам
+важно, чтобы порядок соблюдался, так как данные пишутся в структуру данных как есть
+чтобы не получилось так, чтобы апрель был перед январем
+'''
 #переменная хранит путь к файлам
-
-'''report_dir = 'result/archive/jan/site'
+report_dir = 'result/archive/jan/site'
 collect(report_dir)
 
 report_dir = 'result/archive/feb/site'
 collect(report_dir)
 
 report_dir = 'result/archive/mar/site'
-collect(report_dir)'''
+collect(report_dir)
 #к сожалению данные short стали собираться только с апреля 2025 года
 report_dir = 'result/archive/apr/site'
 collect(report_dir)
 
 
-'''report_dir = 'result/archive/may/site'
+report_dir = 'result/archive/may/site'
 collect(report_dir)
 
 
@@ -187,21 +223,25 @@ report_dir = 'result/archive/jun/site'
 collect(report_dir)
 
 report_dir = 'result/site'
-collect(report_dir)'''
+collect(report_dir)
 
-
+'''
+создаем папки при необходимости
+и в каждую папку бросаем по 3 графика
+после вызываем генератор индивидуальных страниц бумаги
+ВНИМАНИЕ: общим перестроением лучше не увлекаться, так как общее перестроение занимает время
+'''
 
 '''for item in paper_arr:
     os.mkdir('result/papers/'+item.isin)
-
+'''
 for item in paper_arr:
-    graphic(item.dates, item.price,item.doh,item.volume, 'result/papers/'+item.isin[0:len(item.isin) - 1] + '/')'''
+    graphic(item.dates, item.price,item.doh,item.volume, 'result/papers/'+item.isin[0:len(item.isin) - 1] + '/')
 
 files_m = {'price': 'price.png', 'doh': 'doh.png', 'vol': 'vol.png'}
 for item in paper_arr:
-    '''file_fname = 'result/papers/'+item.isin + '.html'
-    file_name = item.isin[0:len(item.isin) - 1] + '/'''
     page_generator('result/papers/'+item.isin + '.html',item.isin[0:len(item.isin) - 1] + '/', files_m)
 
+page_generator_all_papers('result/papers.html', paper_arr)
 
 print(len(paper_arr))
