@@ -36,6 +36,7 @@ def seek(ofz, month):
         counter += 1
 #отрезаем кусочек данных интересующего месяца
 #передаем датасет и номер месяца, который интересует
+#есть костыль в виде проверки пограничного значения counter, чтобы не вылететь за рамки
 def sliser(ofz, month):
     markers = []
     price = []
@@ -48,8 +49,10 @@ def sliser(ofz, month):
         price.append(ofz['Средняя цена'][counter])
         doh.append(ofz['Средняя доходность последней сделки'][counter])
         volume.append(ofz['Объем торгов в рублях'][counter])
-
-        counter += 1
+        if counter != (len(ofz['Дата']) - 1):
+            counter += 1
+        else:
+            return markers, price,doh,volume
 
     return markers, price,doh,volume
 #отрисовка графиков цены, доходности и объема
@@ -80,6 +83,8 @@ def graphic(markers, price,doh,volume, path):
     ax.plot(markers, volume, '-go', linewidth=2, markersize=6, markerfacecolor='black')
     ax.grid()
     plt.savefig(path['vol'])
+    plt.clf()
+    plt.close()
 #подсчет статистик за месяц для генерации страницы    
 def stats(markers, price,doh, volume):
     price_med = statistics.median(price)
@@ -115,7 +120,6 @@ def page_generator(markers, price,doh, volume, file_name, price_med,doh_med,volu
     
     
     
-    
         
 #логика проста: отрезаем кусочек данных за интересующий месяц и вызываем отрисовку графика и генерацию страницы
 markers, price,doh,volume = sliser(ofz, '1')
@@ -126,9 +130,7 @@ file_name = 'result/archive/jan/datajan.html'
 header = 'Статистика за январь 2025'
 page_generator(markers, price,doh,volume, file_name, price_med, doh_med,volume_med, header, files_jan)
 
-'''print(round(price_med,2))
-print(round(doh_med,2))
-print(round(volume_med,2))'''
+
 
 markers, price,doh,volume = sliser(ofz, '2')
 graphic(markers, price,doh,volume, path_feb)
@@ -164,6 +166,13 @@ price_med, doh_med,volume_med = stats(markers, price,doh,volume)
 file_name = 'result/archive/jun/datajun.html'
 header = 'Статистика за июнь 2025'
 page_generator(markers, price,doh,volume, file_name, price_med, doh_med,volume_med, header, files_jun)
+
+markers, price,doh,volume = sliser(ofz, '7')
+graphic(markers, price,doh,volume, path_jul)
+price_med, doh_med,volume_med = stats(markers, price,doh,volume)
+file_name = 'result/archive/jul/datajul.html'
+header = 'Статистика за июль 2025'
+page_generator(markers, price,doh,volume, file_name, price_med, doh_med,volume_med, header, files_jul)
 
 '''markers, price,doh,volume = sliser(ofz, '7')
 graphic(markers, price,doh,volume, path_jul)'''
