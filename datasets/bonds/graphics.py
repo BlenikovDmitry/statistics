@@ -3,6 +3,11 @@ import pandas as pd
 import statistics
 import html_engine as eng
 
+'''
+скрипт заполняет страницу общих данных по каждому месяцу в архиве
+нужен, чтобы провести разведочный анализ торгов в конкретном месяце и выдать по нему отчет
+'''
+
 #считываем сырые данные
 ofz = pd.read_csv('result_ofz.csv', encoding = 'Windows-1251')
 

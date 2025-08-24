@@ -5,6 +5,13 @@ import pandas as pd
 import html_engine as eng
 
 
+'''
+скрипт формирует папку papers, куда скидывает анализ всех бумаг за все время
+и формирует общий список в файл papers.html
+ВАЖНО! удали содержимое папки papers перед запуском, так как скрипт пересоздает все папки
+чтобы добавить бумаги, которых раньше не было в списке
+'''
+
 
 '''
 основной класс, содержит данные по бумагам
@@ -222,6 +229,9 @@ collect(report_dir)
 report_dir = 'result/archive/jun/site'
 collect(report_dir)
 
+report_dir = 'result/archive/jul/site'
+collect(report_dir)
+
 report_dir = 'result/site'
 collect(report_dir)
 
@@ -232,9 +242,9 @@ collect(report_dir)
 ВНИМАНИЕ: общим перестроением лучше не увлекаться, так как общее перестроение занимает время
 '''
 
-'''for item in paper_arr:
+for item in paper_arr:
     os.mkdir('result/papers/'+item.isin)
-'''
+
 for item in paper_arr:
     graphic(item.dates, item.price,item.doh,item.volume, 'result/papers/'+item.isin[0:len(item.isin) - 1] + '/')
 
