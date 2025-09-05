@@ -2,6 +2,7 @@ import streamlit as st
 import sys
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 st.header("Анализ облигаций общий")
@@ -47,12 +48,45 @@ top_papers_subset = top_papers_subset.dropna(subset=['Цена закрытия'
 #выводим топ ликвидных(наибольшее число сделок)
 top_papers_subset = top_papers_subset.sort_values('Сделок шт.', ascending=False)
 st.subheader("Топ 10 ликвидных")
-st.write(top_papers_subset.head(10))
+top_papers_tmp = top_papers_subset.head(10)
+st.write(top_papers_tmp)
+#выводим столбцовый график ликвидных бумаг
+fig, ax = plt.subplots(figsize=(13,10))
+plt.xticks(rotation="vertical")
+ax.set_title("Распределение число сделок по выпускам")
+bars = ax.bar(top_papers_tmp['Наименование'], top_papers_tmp['Сделок шт.'], linewidth = 3.0, color = 'blue', ec='red')
+ax.bar_label(bars)
+ax.grid()
+st.pyplot(fig)
+plt.close()
+
+
 #выводим топ доходных(самая высокая доха последней сделки)
 top_papers_subset = top_papers_subset.sort_values('Дох посл сделки', ascending=False)
 st.subheader("Топ 10 доходных")
-st.write(top_papers_subset.head(10))
+top_papers_tmp = top_papers_subset.head(10)
+st.write(top_papers_tmp)
+#выводим столбцовый график топовых доходностей
+fig, ax = plt.subplots(figsize=(13,10))
+plt.xticks(rotation="vertical")
+ax.set_title("Распределение дохода последней сделки по выпускам")
+bars = ax.bar(top_papers_tmp['Наименование'], top_papers_tmp['Дох посл сделки'], linewidth = 3.0, color = 'blue', ec='red')
+ax.bar_label(bars)
+ax.grid()
+st.pyplot(fig)
+plt.close()
 #выводим самые дешевые (самая низкая цена)
 top_papers_subset = top_papers_subset.sort_values('Цена закрытия')
 st.subheader("Топ 10 дешевых")
-st.write(top_papers_subset.head(10))
+top_papers_tmp = top_papers_subset.head(10)
+st.write(top_papers_tmp)
+#выводим столбцовый график топовых доходностей
+fig, ax = plt.subplots(figsize=(13,10))
+plt.xticks(rotation="vertical")
+ax.set_title("Распределение дохода последней сделки по выпускам")
+bars = ax.bar(top_papers_tmp['Наименование'], top_papers_tmp['Цена закрытия'], linewidth = 3.0, color = 'blue', ec='red')
+ax.bar_label(bars)
+ax.grid()
+st.pyplot(fig)
+plt.close()
+
