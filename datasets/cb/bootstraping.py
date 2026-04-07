@@ -4,15 +4,14 @@ import random
 
 """
 
-Бутстрапируем полученную выборку, отрисовываем распределение среднего и
-стандартного отклонения(count_iterations итераций)
+Бутстрапируем полученную выборку, отрисовываем распределение среднего (count_iterations итераций)
 генерируем графики
 
 """
         
         
 
-def bootstrap(data, count_iterations):
+def bootstrap(data, count_iterations, flag):
     counter_iteration = 0
     counter = 0
     distribution_average = []
@@ -32,20 +31,27 @@ def bootstrap(data, count_iterations):
     
         
         counter_iteration += 1
-     
-    fig = plt.figure(figsize=(6,6))
-    ax = fig.add_subplot(2,1,1)
-    ax.set_title("Распределение среднего")
-    ax.hist(distribution_average, 50, color = "red", ec="lightblue", edgecolor="black", rwidth = 5)
-    plt.axvline(average,linewidth=4, color='g', label = "Среднее изначальное")
-    plt.legend()
-    ax.grid()
+    if flag == 'ks':
+        fig = plt.figure(figsize=(6,6))
+        ax = fig.add_subplot()
+        ax.set_title("Распределение среднего")
+        ax.hist(distribution_average, 50, color = "blue", ec="lightblue", edgecolor="black", rwidth = 5)
+        plt.axvline(average,linewidth=4, color='g', label = "Среднее изначальное")
+        plt.xlabel("Ставка(%)")
+        plt.ylabel("Количество")
+        plt.legend()
+        ax.grid()
+
+    if flag == 'infl':
+        fig = plt.figure(figsize=(6,6))
+        ax = fig.add_subplot()
+        ax.set_title("Распределение среднего")
+        ax.hist(distribution_average, 50, color = "red", ec="lightblue", edgecolor="black", rwidth = 5)
+        plt.axvline(average,linewidth=4, color='g', label = "Среднее изначальное")
+        plt.xlabel("Инфляция(%)")
+        plt.ylabel("Количество")
+        plt.legend()
+        ax.grid()
     
-    ax = fig.add_subplot(2,1,2)
-    ax.set_title("Распределение стандартного отклонения")
-    ax.hist(distribution_stde, 50, color = "lightblue", ec="red", edgecolor="black", rwidth = 5)
-    plt.axvline(stde,linewidth=4, color='g', label = "Отклонение изначальное")
-    plt.legend()
-    ax.grid()
 
     return plt
