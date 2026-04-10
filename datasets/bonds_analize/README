@@ -18,6 +18,7 @@
 функции:
 -описательный анализ облигаций
 - топ 10 доходных, дешевых, ликвидных бумаг
-Ест файлы типа bonds.csv
+Ест файлы типа bonds.csv, данные для него можно взять на сайте ММВБ:
+https://www.moex.com/ru/marketdata/#/mode=groups&group=4&collection=3&boardgroup=57&data_type=history&date=2026-04-09&category=main
 
 
