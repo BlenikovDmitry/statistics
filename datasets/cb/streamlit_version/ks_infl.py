@@ -27,18 +27,40 @@ del raw_set
 gc.collect()
 #интерфейс заголовка и подсчет корреляции по Пирсону и описательный анализ
 st.header("Анализ ключевой ставки ЦБ и инфляции")
+st.subheader("Корелляция ключевой ставки и инфляции")
+
+correliation = round(final_set[['Ключевая ставка, % годовых', 'Инфляция, % г/г']].corr(method='pearson').iloc[0,1],2)
+#st.write(correliation)
+if correliation == 0:
+    st.write('Нет связи на исследуемом промежутке')
+if correliation > 0:
+    st.write('При росте инфляции растет ключевая ставка')
+    st.write('При падении инфляции падает ключевая ставка')
+if correliation < 0:
+    st.write('При росте инфляции падает ключевая ставка')
+    st.write('При падении инфляции растет ключевая ставка')
+    
+    
+desc = final_set.describe(include = ['float32']).astype('float32').round(2)
 st.subheader("Описательный анализ")
 
-correliation = final_set[['Ключевая ставка, % годовых', 'Инфляция, % г/г']].corr(method='pearson')
-st.write(correliation)
-desc = final_set.describe(include = ['float32']).astype('float32').round(2)
+desc = desc.rename(index = {
+    'count': 'Число наблюдений',
+    'mean': 'Среднее',
+    'std': 'Отклонение от среднего',
+    'min': 'Минимум',
+    'max': 'Максимум',
+    '50%': 'Медиана'
+
+    })
+
 st.write(desc)
 del desc
 del correliation
 gc.collect()
 
 #график наложенных друг на друга инфляции и ключевой ставки
-st.header("Графики")
+st.header("Графики значений и графики распределения КС и инфляции")
 fig, ax = plt.subplots(figsize=(25,10))
 plt.title('Ключевая ставка / Инфляция')
 plt.xlabel("месяц.год")
@@ -63,13 +85,7 @@ ax.hist(distribution_average, 50, color = "red", ec="lightblue", edgecolor="blac
 plt.axvline(average,linewidth=4, color='g', label = "Среднее изначальное")
 plt.legend()
 ax.grid()
-ax = fig.add_subplot(2,1,2)
-ax.set_title("Распределение стандартного отклонения ключевой ставки")
-ax.hist(distribution_stde, 50, color = "lightblue", ec="red", edgecolor="black", rwidth = 5)
-plt.axvline(stde,linewidth=4, color='g', label = "Среднее изначальное")
 
-plt.legend()
-ax.grid()
 st.pyplot(fig)
 plt.close()
 #график бутстрапа инфляции и стандартного отклонения чтобы понять распределение
@@ -82,12 +98,6 @@ ax.hist(distribution_average, 50, color = "green", ec="lightblue", edgecolor="bl
 plt.axvline(average,linewidth=4, color='r', label = "Среднее изначальное")
 plt.legend()
 ax.grid()
-ax = fig.add_subplot(2,1,2)
-ax.set_title("Распределение стандартного отклонения инфляции")
-ax.hist(distribution_stde, 50, color = "gray", ec="red", edgecolor="black", rwidth = 5)
-plt.axvline(stde,linewidth=4, color='r', label = "Среднее изначальное")
 
-plt.legend()
-ax.grid()
 st.pyplot(fig)
 plt.close()
