@@ -87,7 +87,7 @@ while counter_upper < len(bonds_count):
 print("среднее:" + str(round(statistics.mean(result),2)) + '%')
 print("медиана:" + str(round(statistics.mode(result),2)) + '%')
 print("мода:" + str(round(statistics.median(result),2)) + '%')
-print("Стандартное отклонение от среднего:" + str(round(statistics.stdev(result),2)) + '%')
+print("Стандартное отклонение:" + str(round(statistics.stdev(result),2)) + '%')
 
 #после анализа приводим к int, формируем шкалу по оси X и отрисовывааем на графике, сохраняя в отдельный файл
 '''
@@ -105,13 +105,13 @@ while counter < max(result):
     x_ticks.append(counter)
     counter += 1
 
-fig, ax = plt.subplots(figsize=(25,10))
+fig, ax = plt.subplots(figsize=(10,10))
 plt.title("Распределение доходности")
 plt.xlabel("Доходность")
 plt.ylabel("Число купленных бумаг")
 plt.xticks(x_ticks)
 
-ax.hist(result,bins=len(bonds_name), linewidth=2, color = 'green', edgecolor="black", rwidth = 5)
+ax.hist(result,bins=len(bonds_name), linewidth=5, color = 'green', edgecolor="black", rwidth = 5)
 plt.axvline(round(statistics.mean(result),2),linewidth=4, color='r', label = "Средний купон")
 plt.legend()
 ax.grid()
@@ -131,7 +131,7 @@ while counter < len(bonds_name):
     counter += 1
 
 
-fig, ax = plt.subplots(figsize=(25,10))
+fig, ax = plt.subplots(figsize=(10,10))
 plt.xticks(rotation="vertical")
 ax.set_title("Распределение % купона по выпускам")
 bars = ax.bar(bonds_name, interest, linewidth = 3.0, color = 'blue', ec='red')
