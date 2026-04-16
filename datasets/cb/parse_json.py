@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import plotly.express as px
 '''
 Функция парсит json файл данных
 - загружает файл .json
@@ -33,3 +34,15 @@ def write_raw_json(path, req):
         return {'Данные загружены в файл json' }
     else:
         return req.status_code
+
+'''
+функция для отрисовки графика динамики процентных ставок
+-читает файл .csv и отрисовает прямо в браузере
+'''
+def create_graphic(path):
+    df = pd.read_csv(path)
+    df['Вид'] = df['Вид'].str.replace('\'', '')
+    df['Значение'] = df['Значение'].astype(float)
+    fig = px.line(df, x = 'Период', y = 'Значение',color='Вид', markers=True, title = 'Динамика процентных ставок')
+    fig.show()
+
