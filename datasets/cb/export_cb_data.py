@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import requests
 import pandas as pd
 import json
-from parse_json import parse_to_csv, write_raw_json
+from parse_json import parse_to_csv, write_raw_json, create_graphic
 '''
 ендпоинты для получения данных с сайта ЦБ РФ
 + распарсить json в dataframe
@@ -16,7 +16,10 @@ app = FastAPI()
 def export_deposit_interest(y1:int, y2:int):
     req = requests.get(f'https://www.cbr.ru/dataservice/data?y1={y1}&y2={y2}&publicationId=18&datasetId=37&measureId=2')
     print( write_raw_json(f'deposit/from_{y1}_to_{y2}.json', req))
-    return { parse_to_csv(f'deposit/from_{y1}_to_{y2}.json')} 
+    print( parse_to_csv(f'deposit/from_{y1}_to_{y2}.json'))
+    create_graphic(f'deposit/from_{y1}_to_{y2}.csv')
+    
+    return { 'Данные успешно загружены' } 
 
 #2) Средневзвешенная ставка по ипотечным жилищным кредитам, предоставленным физическим лицам-резидентам
 #https://www.cbr.ru/dataservice/data?y1=2026&y2=2026&publicationId=14&datasetId=29&measureId=
@@ -24,7 +27,10 @@ def export_deposit_interest(y1:int, y2:int):
 def export_mortgage_interest(y1:int, y2:int):
     req = requests.get(f'https://www.cbr.ru/dataservice/data?y1={y1}&y2={y2}&publicationId=14&datasetId=29&measureId=')
     print( write_raw_json(f'mortgage/from_{y1}_to_{y2}.json', req))
-    return { parse_to_csv(f'mortgage/from_{y1}_to_{y2}.json')}
+    print( parse_to_csv(f'mortgage/from_{y1}_to_{y2}.json'))
+    create_graphic(f'mortgage/from_{y1}_to_{y2}.csv')
+    
+    return { 'Данные успешно загружены' }
     
 
 #3) Средневзвешенные процентные ставки по кредитам, предоставленным кредитными организациями физическим лицам
@@ -33,7 +39,10 @@ def export_mortgage_interest(y1:int, y2:int):
 def export_credit_interest(y1:int, y2:int):
     req = requests.get(f'https://www.cbr.ru/dataservice/data?y1={y1}&y2={y2}&publicationId=14&datasetId=27&measureId=2')
     print (write_raw_json(f'credit/from_{y1}_to_{y2}.json', req))
-    return { parse_to_csv(f'credit/from_{y1}_to_{y2}.json')}
+    print( parse_to_csv(f'credit/from_{y1}_to_{y2}.json'))
+    create_graphic(f'credit/from_{y1}_to_{y2}.csv')
+    
+    return { 'Данные успешно загружены' }
 
 
 #4) Задолженность по кредитам, предоставленным физическим лицам-резидентам
@@ -42,7 +51,10 @@ def export_credit_interest(y1:int, y2:int):
 def export_credit_debt(y1:int, y2:int):
     req = requests.get(f'https://www.cbr.ru/dataservice/data?y1={y1}&y2={y2}&publicationId=20&datasetId=42&measureId=22')
     print( write_raw_json(f'credit_debt/from_{y1}_to_{y2}.json', req)) 
-    return { parse_to_csv(f'credit_debt/from_{y1}_to_{y2}.json')}
+    print( parse_to_csv(f'credit_debt/from_{y1}_to_{y2}.json'))
+    create_graphic(f'credit_debt/from_{y1}_to_{y2}.csv')
+    
+    return { 'Данные успешно загружены' }
 
 #41) Просроченная задолженность по кредитам, предоставленным физическим лицам-резидентам
 #https://www.cbr.ru/dataservice/data?y1=2026&y2=2026&publicationId=20&datasetId=43&measureId=22
@@ -50,4 +62,7 @@ def export_credit_debt(y1:int, y2:int):
 def export_credit_overdue_debt(y1:int,y2:int):
     req = requests.get(f'https://www.cbr.ru/dataservice/data?y1={y1}&y2={y2}&publicationId=20&datasetId=43&measureId=22')
     print( write_raw_json(f'credit_overdue_debt/from_{y1}_to_{y2}.json', req))
-    return { parse_to_csv(f'credit_overdue_debt/from_{y1}_to_{y2}.json')}
+    print( parse_to_csv(f'credit_overdue_debt/from_{y1}_to_{y2}.json'))
+    create_graphic(f'credit_overdue_debt/from_{y1}_to_{y2}.csv')
+    
+    return { 'Данные успешно загружены' }
