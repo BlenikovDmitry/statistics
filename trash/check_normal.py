@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
+import math
 
 df = pd.read_csv('bonds.csv', encoding = 'windows-1251')
 
@@ -68,12 +69,19 @@ def scatter(df, field, df1, field1):
     plt.scatter(df[field], df1[field1], c = 'red', edgecolors = 'black')
     plt.title('Зависимость')
     plt.show()
-
-
-#оценка хвостов - метод хилла
-#отдельно нарисовать график qqplot для хвоста - чтобы понять,  можем ли использовать метод хилла
-#берем натуральный логарифм от точки и сравниваем с экпоненциальным 
-#распределением 
+#оценка целесообразонсти применения метода хилла
+#передаем то что кажется хвостом
+#если хвост ложится около линии экспоненциального распределения
+#значит можно
+def hill_graphic_check(df, field):
+    df['ln'] = np.log(df[field])
+    plt.figure(figsize=(6,4))
+    stats.probplot(df['ln'], dist=stats.expon, plot=plt)
+    plt.title("Q-Q график (Проверка на нормальность)")
+    plt.xlabel("Теоретические квантили")
+    plt.ylabel("Выборочные квантили")
+    plt.grid(True)
+    plt.show()
 
 #можно потом обернуть в интерфейс streamlit и/или 
 #ендпоинты fast api
