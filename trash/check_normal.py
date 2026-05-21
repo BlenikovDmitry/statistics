@@ -6,21 +6,29 @@ import math
 
 df = pd.read_csv('bonds.csv', encoding = 'windows-1251')
 
-df['Сумма купона'] = df['Сумма купона'].str.replace('-','0')
+'''df['Сумма купона'] = df['Сумма купона'].str.replace('-','0')
 df['Сумма купона'] = df['Сумма купона'].str.replace(',','.')
-df['Сумма купона'] = df['Сумма купона'].astype(np.float32)
+df['Сумма купона'] = df['Сумма купона'].astype(np.float32)'''
+
+df['Значение'] = df['Значение'].str.replace(',','.')
+df['Значение'] = df['Значение'].astype(np.float32)
 
 #print(df['Сумма купона'])
 
-#функция подсчета среднего, медианы, моды
+
+#функция подсчета среднего, медианы
 #и разведочного анализа
 def statistic(df, field):
     mean = df[field].mean()
     median = df[field].median()
-    mode = df[field].mode()
     desc = df[field].describe()
 
-    return (mean, median, mode, desc)
+    return (mean, median, desc)
+
+'''mean, median, desc = statistic(df, 'Значение')
+print(mean)
+print(median)
+print(desc)'''
 
 #функция построения квантиль - квантильного графика
 #сравниваем с нормальным распределением
@@ -33,7 +41,8 @@ def qqplot(df, field):
     plt.ylabel("Выборочные квантили")
     plt.grid(True)
     plt.show()
-    
+
+#qqplot(df, 'Значение')
 #подсчет z оценок каждого из элементов
 def z_scores(df, field):
     return stats.zscore(df[field])
@@ -44,24 +53,28 @@ def check_outliers(df, field):
     z_np2 = np.sum((z_scores1 > 1.96) | (z_scores1 < -1.96))
     return (z_np2 / df[field].count()) * 100
 
+#print(check_outliers(df, 'Значение'))
 #функция считает по сигмам
 #если в сумме не 100%, значит есть пропуски в столбце
 def count_sigmas(df,field):
     std1 = df[field].std()
-    df['sigma'] = abs(df[field] - std1)
-    sigma1 = df[(df['sigma'] < std1)]
-    sigma2 = df[(df['sigma'] > std1) & (df['sigma'] < std1 * 2)]
-    sigma3 = df[(df['sigma'] > std1 * 2) & (df['sigma'] < std1 * 3)]
-    sigma4 = df[(df['sigma'] > std1 * 3) & (df['sigma'] < std1 * 4)]
-    sigma5 = df[(df['sigma'] > std1 * 4) & (df['sigma'] < std1 * 5)]
-    sigma5_1 = df[(df['sigma'] > std1 * 5)]
+    mean_v = df[field].mean()
+    df['sigma'] = abs(df[field] - mean_v) / std1
+    sigma1 = df[(df['sigma'] < 1)]
+    sigma2 = df[(df['sigma'] > 1) & (df['sigma'] < 2)]
+    sigma3 = df[(df['sigma'] > 2) & (df['sigma'] < 3)]
+    sigma4 = df[(df['sigma'] > 3) & (df['sigma'] < 4)]
+    sigma5 = df[(df['sigma'] > 4) & (df['sigma'] < 5)]
+    sigma5_1 = df[(df['sigma'] > 5)]
     print(f' В пределах 1 сигмы {sigma1.shape[0] / df.shape[0] * 100} %')
-    print(f' В пределах 2 сигм {sigma2.shape[0] / df.shape[0] * 100} %')
-    print(f' В пределах 3 сигм {sigma3.shape[0] / df.shape[0] * 100} %')
-    print(f' В пределах 4 сигм {sigma4.shape[0] / df.shape[0] * 100} %')
-    print(f' В пределах 5 сигм {sigma5.shape[0] / df.shape[0] * 100} %')
+    print(f' От 1 до 2 сигм {sigma2.shape[0] / df.shape[0] * 100} %')
+    print(f' От 2 до 3 сигм {sigma3.shape[0] / df.shape[0] * 100} %')
+    print(f' От 3 до 4 сигм {sigma4.shape[0] / df.shape[0] * 100} %')
+    print(f' От 4 до 5 сигм {sigma5.shape[0] / df.shape[0] * 100} %')
     print(f' Более 5 сигм: {sigma5_1.shape[0] / df.shape[0] * 100} %')
 
+df['returns'] = df['Значение'].pct_change()
+#count_sigmas(df, 'returns')
 #диаграмма рассеивания - нужно протестить
 #если x = y - можно понять, есть ли разрывы в данных и сходу сгруппировать визуально
 def scatter(df, field, df1, field1):
@@ -82,6 +95,7 @@ def hill_graphic_check(df, field):
     plt.ylabel("Выборочные квантили")
     plt.grid(True)
     plt.show()
-
+#hill_graphic_check(df, 'returns')
+#напиши метод хилла и сделай из этого выводы
 #можно потом обернуть в интерфейс streamlit и/или 
 #ендпоинты fast api
