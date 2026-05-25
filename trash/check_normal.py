@@ -119,8 +119,8 @@ def hill_method(df, field, k):
 
     return result
 #Пытаемся подобрать k, чтобы оценить распределение
-for i in range(1,df['returns'].shape[0] - 5):
-    print(hill_method(df, 'returns', i))
-    
+#for i in range(1,df['returns'].shape[0] - 5):
+#    print(hill_method(df, 'returns', i))
+print(hill_method(df, 'returns', 9))
 #можно потом обернуть в интерфейс streamlit и/или 
 #ендпоинты fast api
