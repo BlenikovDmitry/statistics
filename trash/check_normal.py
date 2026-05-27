@@ -3,17 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import math
+import streamlit as st
 
-df = pd.read_csv('bonds.csv', encoding = 'windows-1251')
+#подготовка данных и дополнили столбцом изменения в %
+def prepare_data_field(df, field):
+    df[field] = df[field].str.replace(',','.')
+    df[field] = df[field].astype(np.float32)
+    df['Изменение(%)'] = df[field].pct_change() * 100
 
-'''df['Сумма купона'] = df['Сумма купона'].str.replace('-','0')
-df['Сумма купона'] = df['Сумма купона'].str.replace(',','.')
-df['Сумма купона'] = df['Сумма купона'].astype(np.float32)'''
-
-df['Значение'] = df['Значение'].str.replace(',','.')
-df['Значение'] = df['Значение'].astype(np.float32)
-
-#print(df['Сумма купона'])
 
 
 #функция подсчета среднего, медианы
@@ -25,10 +22,6 @@ def statistic(df, field):
 
     return (mean, median, desc)
 
-'''mean, median, desc = statistic(df, 'Значение')
-print(mean)
-print(median)
-print(desc)'''
 
 #функция построения квантиль - квантильного графика
 #сравниваем с нормальным распределением
@@ -40,7 +33,7 @@ def qqplot(df, field):
     plt.xlabel("Теоретические квантили")
     plt.ylabel("Выборочные квантили")
     plt.grid(True)
-    plt.show()
+    return plt
 
 #qqplot(df, 'Значение')
 #подсчет z оценок каждого из элементов
@@ -66,16 +59,13 @@ def count_sigmas(df,field):
     sigma4 = df[(df['sigma'] > 3) & (df['sigma'] < 4)]
     sigma5 = df[(df['sigma'] > 4) & (df['sigma'] < 5)]
     sigma5_1 = df[(df['sigma'] > 5)]
-    print(f' В пределах 1 сигмы {sigma1.shape[0] / df.shape[0] * 100} %')
-    print(f' От 1 до 2 сигм {sigma2.shape[0] / df.shape[0] * 100} %')
-    print(f' От 2 до 3 сигм {sigma3.shape[0] / df.shape[0] * 100} %')
-    print(f' От 3 до 4 сигм {sigma4.shape[0] / df.shape[0] * 100} %')
-    print(f' От 4 до 5 сигм {sigma5.shape[0] / df.shape[0] * 100} %')
-    print(f' Более 5 сигм: {sigma5_1.shape[0] / df.shape[0] * 100} %')
+    st.write(f' В пределах 1 сигмы {sigma1.shape[0] / df.shape[0] * 100} %')
+    st.write(f' От 1 до 2 сигм {sigma2.shape[0] / df.shape[0] * 100} %')
+    st.write(f' От 2 до 3 сигм {sigma3.shape[0] / df.shape[0] * 100} %')
+    st.write(f' От 3 до 4 сигм {sigma4.shape[0] / df.shape[0] * 100} %')
+    st.write(f' От 4 до 5 сигм {sigma5.shape[0] / df.shape[0] * 100} %')
+    st.write(f' Более 5 сигм: {sigma5_1.shape[0] / df.shape[0] * 100} %')
     
-#пишем столбец с изменениями чтобы оценить риски
-df['returns'] = df['Значение'].pct_change()
-#count_sigmas(df, 'returns')
 #диаграмма рассеивания - нужно протестить
 #если x = y - можно понять, есть ли разрывы в данных и сходу сгруппировать визуально
 def scatter(df, field, df1, field1):
@@ -95,8 +85,7 @@ def hill_graphic_check(df, field):
     plt.xlabel("Теоретические квантили")
     plt.ylabel("Выборочные квантили")
     plt.grid(True)
-    plt.show()
-#hill_graphic_check(df, 'returns')
+    return plt
 '''
 Если \(\gamma < 0.5\) (ваш случай): У вашего процесса существует конечная дисперсия (и конечное среднее). 
 Это значит, что несмотря на наличие крупных выбросов, процесс всё ещё поддается классическому долгосрочному прогнозированию
@@ -118,9 +107,4 @@ def hill_method(df, field, k):
     result = np.mean(np.log(top_k / k_1))
 
     return result
-#Пытаемся подобрать k, чтобы оценить распределение
-#for i in range(1,df['returns'].shape[0] - 5):
-#    print(hill_method(df, 'returns', i))
-print(hill_method(df, 'returns', 9))
-#можно потом обернуть в интерфейс streamlit и/или 
-#ендпоинты fast api
+#можно потом обернуть в ендпоинты fast api
