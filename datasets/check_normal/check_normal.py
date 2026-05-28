@@ -8,8 +8,9 @@ import streamlit as st
 #подготовка данных и дополнили столбцом изменения в %
 def prepare_data_field(df, field):
     df[field] = df[field].str.replace(',','.')
-    df[field] = df[field].astype(np.float32)
+    df[field] = df[field].astype(np.float32).round(2)
     df['Изменение(%)'] = df[field].pct_change() * 100
+    df.iloc[0,2] = 0.0
 
 
 
@@ -18,7 +19,17 @@ def prepare_data_field(df, field):
 def statistic(df, field):
     mean = df[field].mean()
     median = df[field].median()
-    desc = df[field].describe()
+    desc = df[field].describe().rename({
+    'count': 'Количество',
+    'mean': 'Среднее',
+    'std': 'Станд. отклон.',
+    'min': 'Минимум',
+    '25%': '25-й перцентиль',
+    '50%': 'Медиана',
+    '75%': '75-й перцентиль',
+    'max': 'Максимум'
+    })
+    desc = desc.round(2)
 
     return (mean, median, desc)
 
@@ -59,12 +70,12 @@ def count_sigmas(df,field):
     sigma4 = df[(df['sigma'] > 3) & (df['sigma'] < 4)]
     sigma5 = df[(df['sigma'] > 4) & (df['sigma'] < 5)]
     sigma5_1 = df[(df['sigma'] > 5)]
-    st.write(f' В пределах 1 сигмы {sigma1.shape[0] / df.shape[0] * 100} %')
-    st.write(f' От 1 до 2 сигм {sigma2.shape[0] / df.shape[0] * 100} %')
-    st.write(f' От 2 до 3 сигм {sigma3.shape[0] / df.shape[0] * 100} %')
-    st.write(f' От 3 до 4 сигм {sigma4.shape[0] / df.shape[0] * 100} %')
-    st.write(f' От 4 до 5 сигм {sigma5.shape[0] / df.shape[0] * 100} %')
-    st.write(f' Более 5 сигм: {sigma5_1.shape[0] / df.shape[0] * 100} %')
+    st.write(f' В пределах 1 сигмы: {round(sigma1.shape[0] / df.shape[0] * 100,2)} %')
+    st.write(f' От 1 до 2 сигм: {round(sigma2.shape[0] / df.shape[0] * 100,2)} %')
+    st.write(f' От 2 до 3 сигм: {round(sigma3.shape[0] / df.shape[0] * 100,2)} %')
+    st.write(f' От 3 до 4 сигм: {round(sigma4.shape[0] / df.shape[0] * 100,2)} %')
+    st.write(f' От 4 до 5 сигм: {round(sigma5.shape[0] / df.shape[0] * 100,2)} %')
+    st.write(f' Более 5 сигм: {round(sigma5_1.shape[0] / df.shape[0] * 100,2)} %')
     
 #диаграмма рассеивания - нужно протестить
 #если x = y - можно понять, есть ли разрывы в данных и сходу сгруппировать визуально

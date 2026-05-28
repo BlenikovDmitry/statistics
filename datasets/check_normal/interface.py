@@ -18,8 +18,8 @@ if upload:
     st.write(df)
     st.subheader('Статистики')
     mean, median, desc = statistic(df, 'Значение')
-    st.write(f'Среднее: {mean}')
-    st.write(f'Медиана: {median}')
+    st.write(f'Среднее: {round(mean,2)}')
+    st.write(f'Медиана: {median:.2f}')
     st.subheader('Быстрый анализ')
     st.write(desc)
 
@@ -33,7 +33,7 @@ if upload:
         st.pyplot(qqplot(df, 'Значение'))
     if choose == 'z-статистики':
         st.write('% точек вне нормального диапазона лежит: ')
-        st.write(check_outliers(df, 'Значение'))
+        st.write(round(check_outliers(df, 'Значение'),2))
     if choose == 'Подсчет сигм':
         count_sigmas(df, 'Значение')
     if choose == 'Оценка применимости метода Хилла':
@@ -43,7 +43,7 @@ if upload:
                                  min_value = 1,
                                  max_value = df.shape[0], step = 1)
         if number:
-            st.write(hill_method(df, 'Изменение(%)', int(number)))
+            st.write(round(hill_method(df, 'Изменение(%)', int(number)),2))
         
 
         
