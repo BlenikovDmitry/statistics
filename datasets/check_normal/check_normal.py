@@ -8,8 +8,8 @@ import streamlit as st
 #подготовка данных и дополнили столбцом изменения в %
 def prepare_data_field(df, field):
     df[field] = df[field].str.replace(',','.')
-    df[field] = df[field].astype(np.float32).round(2)
-    df['Изменение(%)'] = df[field].pct_change() * 100
+    df[field] = df[field].astype(np.float64).round(2)
+    df['Изменение(%)'] = (df[field].pct_change() * 100).round(2)
     df.iloc[0,2] = 0.0
 
 
