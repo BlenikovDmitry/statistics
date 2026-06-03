@@ -83,7 +83,10 @@ def scatter(df, field, df1, field1):
     plt.figure(figsize = (6,4))
     plt.scatter(df[field], df1[field1], c = 'red', edgecolors = 'black')
     plt.title('Зависимость')
-    plt.show()
+    plt.xlabel(field)
+    plt.ylabel(field1)
+    plt.grid(True)
+    return plt
 #оценка целесообразонсти применения метода хилла
 #передаем то что кажется хвостом
 #если хвост ложится около линии экспоненциального распределения

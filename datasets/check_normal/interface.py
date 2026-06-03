@@ -7,6 +7,7 @@ from check_normal import check_outliers
 from check_normal import count_sigmas
 from check_normal import hill_graphic_check
 from check_normal import hill_method
+from check_normal import scatter
 
 st.header('Проверка нормального распределения')
 
@@ -44,6 +45,13 @@ if upload:
                                  max_value = df.shape[0], step = 1)
         if number:
             st.write(round(hill_method(df, 'Изменение(%)', int(number)),2))
+    if choose == 'Диаграмма рассеяния':
+        df_headers = df.columns
+        options = st.multiselect("Выбери столбцы:", (df_headers), max_selections=2,
+                                 default = [df_headers[0], df_headers[1]])
+        if len(options) > 1:
+            st.pyplot(scatter(df, options[0], df, options[1]))
+        
         
 
         
