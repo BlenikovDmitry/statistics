@@ -25,12 +25,14 @@ if upload:
     st.write(desc)
 
     choose = st.radio('Выберите метод:',
-                      ['QQplot', 'z-статистики',
+                      ['Сравнение с эталоном', 'z-статистики',
                       'Подсчет сигм',
                       'Оценка применимости метода Хилла',
                       'Метод Хилла',
-                      'Диаграмма рассеяния'])
-    if choose == 'QQplot':
+                      'Диаграмма рассеяния',
+                       'Коэффициент асимметрии',
+                       'Коэффициент эксцесса'])
+    if choose == 'Сравнение с эталоном':
         st.pyplot(qqplot(df, 'Значение'))
     if choose == 'z-статистики':
         st.write('% точек вне нормального диапазона лежит: ')
@@ -51,6 +53,12 @@ if upload:
                                  default = [df_headers[0], df_headers[1]])
         if len(options) > 1:
             st.pyplot(scatter(df, options[0], df, options[1]))
+    if choose == 'Коэффициент асимметрии':
+        st.write('Коэффициент асимметрии:')
+        st.write(round(df['Значение'].skew(),2))
+    if choose == 'Коэффициент эксцесса':
+        st.write('Коэффициент эксцесса:')
+        st.write(round(df['Значение'].kurt(),2))
         
         
 
