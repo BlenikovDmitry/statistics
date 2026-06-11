@@ -1,7 +1,6 @@
 import pandas as pd
-import gc
 import matplotlib.pyplot as plt
-from bootstraping import bootstrap
+from bootstrap_fast import bootstrap
 import streamlit as st
 import sys
 #загрузчик файла сырых данных
@@ -24,7 +23,6 @@ raw_set['Инфляция, % г/г'] = raw_set['Инфляция, % г/г'].roun
 final_set = raw_set.loc[:, ['Дата', 'Ключевая ставка, % годовых', 'Инфляция, % г/г']]
 
 del raw_set
-gc.collect()
 #интерфейс заголовка и подсчет корреляции по Пирсону и описательный анализ
 st.header("Анализ ключевой ставки ЦБ и инфляции")
 st.subheader("Корелляция ключевой ставки и инфляции")
@@ -57,7 +55,6 @@ desc = desc.rename(index = {
 st.write(desc)
 del desc
 del correliation
-gc.collect()
 
 #график наложенных друг на друга инфляции и ключевой ставки
 st.header("Графики значений и графики распределения КС и инфляции")
@@ -77,12 +74,11 @@ plt.close()
 #график бутстрапа ключевой ставки и стандартного отклонения чтобы понять распределение
 st.subheader("Ключевая ставка: ")
 count_iterations = 10000
-distribution_average, distribution_stde, average, stde = bootstrap(final_set['Ключевая ставка, % годовых'], count_iterations)
+distribution_average, distribution_stde = bootstrap(final_set['Ключевая ставка, % годовых'], count_iterations)
 fig = plt.figure(figsize=(6,6))
 ax = fig.add_subplot(2,1,1)
 ax.set_title("Распределение среднего ключевой ставки")
 ax.hist(distribution_average, 50, color = "red", ec="lightblue", edgecolor="black", rwidth = 5)
-plt.axvline(average,linewidth=4, color='g', label = "Среднее изначальное")
 plt.legend()
 ax.grid()
 
@@ -90,12 +86,11 @@ st.pyplot(fig)
 plt.close()
 #график бутстрапа инфляции и стандартного отклонения чтобы понять распределение
 st.subheader("Инфляция: ")
-distribution_average, distribution_stde, average, stde = bootstrap(final_set['Инфляция, % г/г'], count_iterations)
+distribution_average, distribution_stde = bootstrap(final_set['Инфляция, % г/г'], count_iterations)
 fig = plt.figure(figsize=(6,6))
 ax = fig.add_subplot(2,1,1)
 ax.set_title("Распределение среднего инфляции")
 ax.hist(distribution_average, 50, color = "green", ec="lightblue", edgecolor="black", rwidth = 5)
-plt.axvline(average,linewidth=4, color='r', label = "Среднее изначальное")
 plt.legend()
 ax.grid()
 
