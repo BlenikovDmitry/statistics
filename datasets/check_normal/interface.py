@@ -14,7 +14,7 @@ st.header('Проверка нормального распределения')
 upload = st.file_uploader('Выберите файл')
 
 if upload:
-    df = pd.read_csv(upload, encoding='windows-1251')
+    df = pd.read_csv(upload, encoding='windows-1251', sep = ';')
     prepare_data_field(df, 'Значение')
     st.write(df)
     st.subheader('Статистики')
